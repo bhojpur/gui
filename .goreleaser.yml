@@ -1,0 +1,61 @@
+before:
+  hooks:
+    - go generate -v ./...
+builds:
+- id: guisvr
+  env:
+  - CGO_ENABLED=0
+  main: server.go
+  binary: guisvr
+  ldflags:
+  - -s -w -X github.com/bhojpur/gui/cmd/server.version={{.Version}}-{{.ShortCommit}}
+- id: guictl
+  env:
+  - CGO_ENABLED=0
+  main: client.go
+  binary: guictl
+  flags:
+    - -tags=guictl
+  ldflags:
+  - -s -w -X github.com/bhojpur/gui/cmd/client.version={{.Version}}-{{.ShortCommit}}
+archives:
+- id: guisvr
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+  builds:
+  - guisvr
+- id: guictl
+  files:
+  - "none*"
+  format: binary
+  builds:
+  - guictl
+  replacements:
+    darwin: Darwin
+    linux: Linux
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+release:
+  prerelease: auto
+dockers:
+  - goos: linux
+    goarch: amd64
+    goarm: ''
+    dockerfile: Dockerfile
+    image_templates:
+    - "ghcr.io/bhojpur/gui:{{ .Tag }}"
+    extra_files:
+    - README.md
