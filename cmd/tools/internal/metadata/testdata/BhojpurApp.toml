@@ -1,0 +1,9 @@
+Website = "https://app.bhojpur.net"
+
+[Details]
+Name = "Bhojpur App"
+ID = "net.bhojpur.gui"
+Icon = "https://static.bhojpur.net/image/logo.png"
+Version = "v1.0"
+Build = 1
+

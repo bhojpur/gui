@@ -1,0 +1,57 @@
+package metadata
+
+// Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+import (
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestSaveAppMetadata(t *testing.T) {
+	r, err := os.Open("./testdata/BhojpurApp.toml")
+	assert.Nil(t, err)
+	data, err := Load(r)
+	_ = r.Close()
+	assert.Nil(t, err)
+	assert.Equal(t, 1, data.Details.Build)
+
+	data.Details.Build++
+
+	versionPath := "./testdata/Version.toml"
+	w, err := os.Create(versionPath)
+	assert.Nil(t, err)
+	err = Save(data, w)
+	assert.Nil(t, err)
+	defer func() {
+		os.Remove(versionPath)
+	}()
+	_ = w.Close()
+
+	r, err = os.Open(versionPath)
+	assert.Nil(t, err)
+	defer r.Close()
+
+	data2, err := Load(r)
+	assert.Nil(t, err)
+	assert.Equal(t, 2, data2.Details.Build)
+}

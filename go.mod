@@ -3,9 +3,31 @@ module github.com/bhojpur/gui
 go 1.17
 
 require (
+	github.com/BurntSushi/toml v1.0.0
+	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9
+	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3
+	github.com/fsnotify/fsnotify v1.5.1
+	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
+	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
+	github.com/go-ole/go-ole v1.2.6
+	github.com/godbus/dbus/v5 v5.0.4
+	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c
+	github.com/jackmordaunt/icns v1.0.0
+	github.com/josephspurrier/goversioninfo v1.4.0
 	github.com/lib/pq v1.10.4
+	github.com/lucor/goinfo v0.0.0-20210802170112-c078a2b0f08b
+	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/cobra v1.3.0
+	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44
+	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41
+	github.com/stretchr/testify v1.7.0
+	github.com/urfave/cli/v2 v2.3.0
+	github.com/yuin/goldmark v1.4.6
+	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
+	golang.org/x/mod v0.5.1
+	golang.org/x/sys v0.0.0-20220209214540-3681064d5158
+	golang.org/x/tools v0.1.9
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
 	k8s.io/apimachinery v0.23.1
@@ -14,6 +36,8 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.0.0 // indirect
+	github.com/akavel/rsrc v0.10.2 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
@@ -26,14 +50,17 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.0.0-20211215153901-e495a2d5b3d3 // indirect
-	golang.org/x/net v0.0.0-20220111093109-d55c255bac03 // indirect
+	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
-	golang.org/x/sys v0.0.0-20220111092808-5a964db01320 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
+	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220111164026-67b88f271998 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect

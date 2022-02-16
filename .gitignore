@@ -1,6 +1,3 @@
-.idea
-.vscode
-.DS_Store
 *.swp
 *.swo
 bhojpur.iml
@@ -10,3 +7,54 @@ test/tmp/
 my save path/
 
 profile.out
+
+### Project Specific
+cmd/client/guictl
+cmd/client/guictl.exe
+cmd/server/guisvr
+cmd/server/guisvr.exe
+cmd/tools/guiutl
+cmd/tools/guiutl.exe
+internal/guidbg
+internal/guidbg.apk
+internal/guidbg.app
+internal/guidbg.exe
+gui-cross
+
+### Tests
+**/testdata/failed
+
+### Go
+# Output of the coverage tool
+*.out
+
+### macOS
+# General
+.DS_Store
+
+# Thumbnails
+._*
+
+### JetBrains
+.idea
+
+### VSCode
+.vscode
+
+### Vim
+# Swap
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-v][a-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+
+# Temporary
+.netrwhist
+*~
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
