@@ -1,4 +1,4 @@
-package pkg
+package document
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,25 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+// Embedded standard fonts
 
-	GoVersion string
-	GitBranch string
+import (
+	"embed"
+	"io"
+	"strings"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+//go:embed font_embed/*.json font_embed/*.map
+var embFS embed.FS
+
+func (f *Bdf) coreFontReader(familyStr, styleStr string) (r io.ReadCloser) {
+	key := familyStr + styleStr
+	key = strings.ToLower(key)
+	emb, err := embFS.Open("font_embed/" + key + ".json")
+	if err == nil {
+		r = emb
+	} else {
+		f.SetErrorf("could not locate \"%s\" among embedded core font definition files", key)
+	}
+	return
+}

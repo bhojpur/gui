@@ -1,4 +1,4 @@
-package pkg
+package document
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,14 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+type wbuffer struct {
+	p []byte
+	c int
+}
 
-	GoVersion string
-	GitBranch string
-)
+func (w *wbuffer) u8(v uint8) {
+	w.p[w.c] = v
+	w.c++
+}
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+func (w *wbuffer) bytes() []byte { return w.p }

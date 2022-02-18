@@ -40,11 +40,11 @@ extern BOOL menuEnabled(int);
 extern BOOL menuChecked(int);
 extern void exceptionCallback(const char*);
 
-@interface FyneMenuHandler : NSObject {
+@interface BhojpurMenuHandler : NSObject {
 }
 @end
 
-@implementation FyneMenuHandler
+@implementation BhojpurMenuHandler
 + (void) tapped:(NSMenuItem*) item {
     menuCallback([item tag]-menuTagMin);
 }
@@ -108,7 +108,7 @@ const void* insertDarwinMenuItem(const void* m, const char* label, const char* k
         if (keyEquivalentModifierMask) {
             [item setKeyEquivalentModifierMask: keyEquivalentModifierMask];
         }
-        [item setTarget:[FyneMenuHandler class]];
+        [item setTarget:[BhojpurMenuHandler class]];
         [item setTag:id+menuTagMin];
     }
 

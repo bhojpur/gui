@@ -1,5 +1,3 @@
-package pkg
-
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,18 +18,10 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+package makefont
 
-	GoVersion string
-	GitBranch string
-)
-
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+/*
+  It generates a Font definition file. The utility is used to generate a font
+  definition file that allows TrueType and Type1 fonts to be used in the BDFs
+  produced with the Bhojpur GUI - Document Engine.
+*/

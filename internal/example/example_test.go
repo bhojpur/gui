@@ -1,4 +1,4 @@
-package pkg
+package example_test
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,16 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+import (
+	"errors"
 
-	GoVersion string
-	GitBranch string
+	"github.com/bhojpur/gui/internal/example"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+// ExampleFilename tests the Filename() and Summary() functions.
+func ExampleFilename() {
+	fileStr := example.Filename("example")
+	example.Summary(errors.New("printer on fire"), fileStr)
+	// Output:
+	// printer on fire
+}

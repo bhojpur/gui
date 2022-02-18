@@ -1,4 +1,4 @@
-package pkg
+package spatial
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,50 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	gui "github.com/bhojpur/gui/pkg/engine"
+	"github.com/bhojpur/gui/pkg/engine/canvas"
+	"github.com/bhojpur/gui/pkg/engine/theme"
+	"github.com/bhojpur/gui/pkg/engine/widget"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+type mapButton struct {
+	widget.Button
+}
+
+func newMapButton(icon gui.Resource, f func()) *mapButton {
+	b := &mapButton{}
+	b.ExtendBaseWidget(b)
+
+	b.Icon = icon
+	b.OnTapped = f
+	return b
+}
+
+func (b *mapButton) CreateRenderer() gui.WidgetRenderer {
+	return &mapButtonRenderer{WidgetRenderer: b.Button.CreateRenderer(),
+		bg: canvas.NewRectangle(theme.ShadowColor())}
+}
+
+type mapButtonRenderer struct {
+	gui.WidgetRenderer
+
+	bg *canvas.Rectangle
+}
+
+func (r *mapButtonRenderer) Layout(s gui.Size) {
+	halfPad := theme.Padding() / 2
+	r.bg.Move(gui.NewPos(halfPad, halfPad))
+	r.bg.Resize(s.Subtract(gui.NewSize(theme.Padding(), theme.Padding())))
+
+	r.WidgetRenderer.Layout(s)
+}
+
+func (r *mapButtonRenderer) Objects() []gui.CanvasObject {
+	return append([]gui.CanvasObject{r.bg}, r.WidgetRenderer.Objects()...)
+}
+
+func (r *mapButtonRenderer) Refresh() {
+	r.bg.FillColor = theme.ShadowColor()
+	r.WidgetRenderer.Refresh()
+}

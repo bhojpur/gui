@@ -1,4 +1,4 @@
-package pkg
+package example
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,25 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+import (
+	"log"
 
-	GoVersion string
-	GitBranch string
+	deck "github.com/bhojpur/gui/pkg/render/presentation"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+func main() {
+	presentation, err := deck.Read("presentation.xml", 1024, 768) // open the deck
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, slide := range presentation.Slide { // for every slide...
+		for _, t := range slide.Text { // process the text elements
+			x, y, size := deck.Dimen(presentation.Canvas, t.Xp, t.Yp, t.Sp)
+			deck.slideText(x, y, size, t)
+		}
+		for _, l := range slide.List { // process the list elements
+			x, y, size := deck.Dimen(presentation.Canvas, l.Xp, l.Yp, l.Sp)
+			slideList(x, y, size, l)
+		}
+	}
+}

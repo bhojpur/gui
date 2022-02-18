@@ -41,12 +41,12 @@ tasks:
     package-android:
         desc: Package the mobile application for Android
         cmds:
-        - guiutl package -name "Bhojpur GUI" -os android -appID net.bhojpur.gui -sourceDir internal -icon internal/Icon.png
+        - guiutl package -name "Bhojpur GUI" -os android -appID net.bhojpur.gui -icon internal/Icon.png
 
     package-ios:
         desc: Package the mobile application for iOS
         cmds:
-        - guiutl package -os -name "Bhojpur GUI"  ios -appID net.bhojpur.gui -sourceDir internal -icon internal/bhojpur.png
+        - guiutl package -name "Bhojpur GUI" -os ios -appID net.bhojpur.gui -icon internal/Icon.png
 
     release-macos:
         desc: Release the native application for macOS App Store

@@ -1,4 +1,4 @@
-package pkg
+package main
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,29 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"fmt"
+	"io"
+	"os"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+func main() {
+	var buf []byte
+	var pos int
+	var b byte
+	var err error
+	buf, err = io.ReadAll(os.Stdin)
+	if err == nil {
+		for _, b = range buf {
+			fmt.Printf("0x%02X, ", b)
+			pos++
+			if pos >= 16 {
+				fmt.Println("")
+				pos = 0
+			}
+		}
+	}
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s\n", err)
+	}
+}

@@ -1,4 +1,4 @@
-package pkg
+package spatial
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,36 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"fmt"
+	"image"
+	"image/png"
+	"net/http"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+var tileMap = make(map[string]image.Image)
+
+func getTile(x, y, zoom int, cl *http.Client) (image.Image, error) {
+	u := fmt.Sprintf("https://tile.openstreetmap.org/%d/%d/%d.png", zoom, x, y)
+	if tile, ok := tileMap[u]; ok {
+		return tile, nil
+	}
+
+	req, err := http.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Set("User-Agent", "Bhojpur GUI - Maps Widget/0.1")
+	res, err := cl.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	img, err := png.Decode(res.Body)
+	if err == nil {
+		tileMap[u] = img
+	}
+	return img, err
+}

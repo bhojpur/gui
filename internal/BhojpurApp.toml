@@ -2,4 +2,4 @@
   Icon = "../pkg/engine/theme/icons/bhojpur.png"
   Name = "Bhojpur Demo Application"
   ID = "net.bhojpur.gui.settings"
-  Build = 6
+  Build = 8

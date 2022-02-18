@@ -1,4 +1,4 @@
-package pkg
+package render
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,32 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
+import (
+	"testing"
 
-	GoVersion string
-	GitBranch string
+	"github.com/bhojpur/gui/pkg/engine/test"
+	"github.com/stretchr/testify/assert"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+func TestNumericalnEntry_Int(t *testing.T) {
+	entry := NewNumericalEntry()
+
+	test.Type(entry, "Not a number")
+	assert.Empty(t, entry.Text)
+
+	number := "123456789"
+	test.Type(entry, number)
+	assert.Equal(t, number, entry.Text)
+}
+
+func TestNumericalnEntry_Float(t *testing.T) {
+	entry := NewNumericalEntry()
+	entry.AllowFloat = true
+
+	test.Type(entry, "Not a number")
+	assert.Empty(t, entry.Text)
+
+	number := "123.456789"
+	test.Type(entry, number)
+	assert.Equal(t, number, entry.Text)
+}

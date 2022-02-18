@@ -1,4 +1,4 @@
-package pkg
+package makefont_test
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -20,18 +20,27 @@ package pkg
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-var (
-	BuildVersion     string
-	BuildGitRevision string
-	BuildStatus      string
-	BuildTag         string
-	BuildTime        string
-
-	GoVersion string
-	GitBranch string
+import (
+	"os/exec"
+	"strings"
+	"testing"
 )
 
-const (
-	// VERSION represent Bhojpur GUI - Application Framework version.
-	VERSION = "0.0.3"
-)
+func TestMakefont(t *testing.T) {
+	var out []byte
+	var err error
+	const expect = "Font definition file successfully generated"
+	// Make sure makefont utility has been built before generating font definition file
+	err = exec.Command("go", "build").Run()
+	if err != nil {
+		t.Fatal(err)
+	}
+	out, err = exec.Command("./makefont", "--dst=../font", "--embed",
+		"--enc=../font/cp1252.map", "../font/calligra.ttf").CombinedOutput()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(string(out), expect) {
+		t.Fatalf("Unexpected output from makefont")
+	}
+}
