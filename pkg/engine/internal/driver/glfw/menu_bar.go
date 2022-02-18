@@ -23,9 +23,9 @@ package glfw
 import (
 	gui "github.com/bhojpur/gui/pkg/engine"
 	"github.com/bhojpur/gui/pkg/engine/canvas"
+	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/driver/desktop"
 	"github.com/bhojpur/gui/pkg/engine/internal/widget"
-	"github.com/bhojpur/gui/pkg/engine/layout"
 	"github.com/bhojpur/gui/pkg/engine/theme"
 )
 
@@ -58,7 +58,7 @@ func NewMenuBar(mainMenu *gui.MainMenu, canvas gui.Canvas) *MenuBar {
 //
 // Implements: gui.Widget
 func (b *MenuBar) CreateRenderer() gui.WidgetRenderer {
-	cont := gui.NewContainerWithLayout(layout.NewHBoxLayout(), b.Items...)
+	cont := container.NewHBox(b.Items...)
 	background := canvas.NewRectangle(theme.ButtonColor())
 	underlay := &menuBarUnderlay{action: b.deactivate}
 	underlay.ExtendBaseWidget(underlay)

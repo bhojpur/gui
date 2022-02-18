@@ -25,6 +25,7 @@ import (
 	"log"
 	"net/url"
 
+	"github.com/bhojpur/gui/internal/data/settings"
 	"github.com/bhojpur/gui/internal/tutorials"
 
 	// demotheme "github.com/bhojpur/gui/internal/theme"
@@ -44,7 +45,7 @@ func main() {
 	// initilize the Bhojpur GUI application
 	demo := app.NewWithID("net.bhojpur.gui.demo")
 	demo.SetIcon(theme.BhojpurLogo())
-	wm := demo.NewWindow("Bhojpur Demo Application")
+	wm := demo.NewWindow("Bhojpur GUI")
 	topWindow = wm
 
 	wm.SetMainMenu(makeMenu(demo, wm))
@@ -124,8 +125,8 @@ func makeMenu(a gui.App, w gui.Window) *gui.MainMenu {
 		otherItem,
 	)
 	settingsItem := gui.NewMenuItem("Settings", func() {
-		w := a.NewWindow("gui Settings")
-		//w.SetContent(settings.NewSettings().LoadAppearanceScreen(w))
+		w := a.NewWindow("Application Settings")
+		w.SetContent(settings.NewSettings().LoadAppearanceScreen(w))
 		w.Resize(gui.NewSize(480, 480))
 		w.Show()
 	})

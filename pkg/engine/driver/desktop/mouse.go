@@ -58,7 +58,7 @@ const (
 type MouseEvent struct {
 	gui.PointEvent
 	Button   MouseButton
-	Modifier Modifier
+	Modifier gui.KeyModifier
 }
 
 // Mouseable represents desktop mouse events that can be sent to CanvasObjects

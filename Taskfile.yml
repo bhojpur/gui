@@ -21,39 +21,47 @@ tasks:
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/guictl client.go 
         - GOFLAGS=-mod=mod go build -o bin/guisvr server.go 
-        - GOFLAGS=-mod=mod go build -o bin/guidbg internal/main.go 
 
-    build-desktop:
+    build-darwin:
         desc: Build the desktop application for current OS
         cmds:
-        - bin/guiutl package -os macos -icon internal/Icon.png
-        - bin/guiutl package -os linux -icon internal/Icon.png
-        - bin/guiutl package -os windows -icon internal/Icon.png
+        - guiutl package -name "Bhojpur GUI" -os darwin -sourceDir internal -icon internal/Icon.png
+        - cp -R "Bhojpur GUI.app" ~/Applications
+
+    build-linux:
+        desc: Build the desktop application for current OS
+        cmds:
+        - guiutl package -name "Bhojpur GUI" -os linux -sourceDir internal -icon internal/Icon.png
+
+    build-windows:
+        desc: Build the desktop application for current OS
+        cmds:
+        - guiutl package -name "Bhojpur GUI" -os windows -sourceDir internal -icon internal/Icon.png
 
     package-android:
         desc: Package the mobile application for Android
         cmds:
-        - bin/guiutl package -os android -appID net.bhojpur.gui -icon internal/Icon.png
+        - guiutl package -name "Bhojpur GUI" -os android -appID net.bhojpur.gui -sourceDir internal -icon internal/Icon.png
 
     package-ios:
         desc: Package the mobile application for iOS
         cmds:
-        - bin/guiutl package -os ios -appID net.bhojpur.gui -icon internal/Icon.png
+        - guiutl package -os -name "Bhojpur GUI"  ios -appID net.bhojpur.gui -sourceDir internal -icon internal/bhojpur.png
 
     release-macos:
         desc: Release the native application for macOS App Store
         cmds:
-        - bin/guiutl release -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1 -category business
+        - guiutl release -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1 -category business
 
     release-android:
         desc: Release the mobile application for Google Play
         cmds:
-        - bin/guiutl release -os android -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1
+        - guiutl release -os android -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1
 
     release-ios:
         desc: Release the mobile application for iOS App Store
         cmds:
-        - bin/guiutl release -os ios -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1
+        - guiutl release -os ios -appID net.bhojpur.gui -appVersion 1.0 -appBuild 1
 
     run-web-server:
         desc: Run the web server application from source code

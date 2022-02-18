@@ -24,6 +24,8 @@ package glfw
 // THE SOFTWARE.
 
 import (
+	"fmt"
+	"strings"
 	"unsafe"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
@@ -40,19 +42,21 @@ void        assignDarwinSubmenu(const void*, const void*);
 void        completeDarwinMenu(void* menu, bool prepend);
 const void* createDarwinMenu(const char* label);
 const void* darwinAppMenu();
-const void* insertDarwinMenuItem(const void* menu, const char* label, int id, int index, bool isSeparator);
+const void* insertDarwinMenuItem(const void* menu, const char* label, const char* keyEquivalent, unsigned int keyEquivalentModifierMask, int id, int index, bool isSeparator);
 void        resetDarwinMenu();
 
 // Used for tests.
-const void* test_darwinMainMenu();
-const void* test_NSMenu_itemAtIndex(const void*, NSInteger);
-NSInteger   test_NSMenu_numberOfItems(const void*);
-void        test_NSMenu_performActionForItemAtIndex(const void*, NSInteger);
-void        test_NSMenu_removeItemAtIndex(const void* m, NSInteger i);
-const char* test_NSMenu_title(const void*);
-bool        test_NSMenuItem_isSeparatorItem(const void*);
-const void* test_NSMenuItem_submenu(const void*);
-const char* test_NSMenuItem_title(const void*);
+const void*   test_darwinMainMenu();
+const void*   test_NSMenu_itemAtIndex(const void*, NSInteger);
+NSInteger     test_NSMenu_numberOfItems(const void*);
+void          test_NSMenu_performActionForItemAtIndex(const void*, NSInteger);
+void          test_NSMenu_removeItemAtIndex(const void* m, NSInteger i);
+const char*   test_NSMenu_title(const void*);
+bool          test_NSMenuItem_isSeparatorItem(const void*);
+const char*   test_NSMenuItem_keyEquivalent(const void*);
+unsigned long test_NSMenuItem_keyEquivalentModifierMask(const void*);
+const void*   test_NSMenuItem_submenu(const void*);
+const char*   test_NSMenuItem_title(const void*);
 */
 import "C"
 
@@ -64,6 +68,36 @@ type menuCallbacks struct {
 
 var callbacks []*menuCallbacks
 var ecb func(string)
+var specialKeys = map[gui.KeyName]string{
+	gui.KeyBackspace: "\x08",
+	gui.KeyDelete:    "\x7f",
+	gui.KeyDown:      "\uf701",
+	gui.KeyEnd:       "\uf72b",
+	gui.KeyEnter:     "\x03",
+	gui.KeyEscape:    "\x1b",
+	gui.KeyF10:       "\uf70d",
+	gui.KeyF11:       "\uf70e",
+	gui.KeyF12:       "\uf70f",
+	gui.KeyF1:        "\uf704",
+	gui.KeyF2:        "\uf705",
+	gui.KeyF3:        "\uf706",
+	gui.KeyF4:        "\uf707",
+	gui.KeyF5:        "\uf708",
+	gui.KeyF6:        "\uf709",
+	gui.KeyF7:        "\uf70a",
+	gui.KeyF8:        "\uf70b",
+	gui.KeyF9:        "\uf70c",
+	gui.KeyHome:      "\uf729",
+	gui.KeyInsert:    "\uf727",
+	gui.KeyLeft:      "\uf702",
+	gui.KeyPageDown:  "\uf72d",
+	gui.KeyPageUp:    "\uf72c",
+	gui.KeyReturn:    "\n",
+	gui.KeyRight:     "\uf703",
+	gui.KeySpace:     " ",
+	gui.KeyTab:       "\t",
+	gui.KeyUp:        "\uf700",
+}
 
 func addNativeMenu(w *window, menu *gui.Menu, nextItemID int, prepend bool) int {
 	menu, nextItemID = handleSpecialItems(w, menu, nextItemID, true)
@@ -100,6 +134,8 @@ func createNativeMenu(w *window, menu *gui.Menu, nextItemID int) (unsafe.Pointer
 		nsMenuItem := C.insertDarwinMenuItem(
 			nsMenu,
 			C.CString(item.Label),
+			C.CString(keyEquivalent(item)),
+			C.uint(keyEquivalentModifierMask(item)),
 			C.int(nextItemID),
 			C.int(-1),
 			C.bool(item.IsSeparator),
@@ -132,6 +168,8 @@ func handleSpecialItems(w *window, menu *gui.Menu, nextItemID int, addSeparator 
 			C.insertDarwinMenuItem(
 				C.darwinAppMenu(),
 				C.CString(item.Label),
+				C.CString(keyEquivalent(item)),
+				C.uint(keyEquivalentModifierMask(item)),
 				C.int(nextItemID),
 				C.int(1),
 				C.bool(false),
@@ -140,6 +178,8 @@ func handleSpecialItems(w *window, menu *gui.Menu, nextItemID int, addSeparator 
 				C.insertDarwinMenuItem(
 					C.darwinAppMenu(),
 					C.CString(""),
+					C.CString(""),
+					C.uint(0),
 					C.int(nextItemID),
 					C.int(1),
 					C.bool(true),
@@ -150,6 +190,36 @@ func handleSpecialItems(w *window, menu *gui.Menu, nextItemID int, addSeparator 
 		}
 	}
 	return menu, nextItemID
+}
+
+func keyEquivalent(item *gui.MenuItem) (key string) {
+	if s, ok := item.Shortcut.(gui.KeyboardShortcut); ok {
+		if key = specialKeys[s.Key()]; key == "" {
+			if len(s.Key()) > 1 {
+				gui.LogError(fmt.Sprintf("unsupported key “%s” for menu shortcut", s.Key()), nil)
+			}
+			key = strings.ToLower(string(s.Key()))
+		}
+	}
+	return
+}
+
+func keyEquivalentModifierMask(item *gui.MenuItem) (mask uint) {
+	if s, ok := item.Shortcut.(gui.KeyboardShortcut); ok {
+		if (s.Mod() & gui.KeyModifierShift) != 0 {
+			mask |= 1 << 17 // NSEventModifierFlagShift
+		}
+		if (s.Mod() & gui.KeyModifierAlt) != 0 {
+			mask |= 1 << 19 // NSEventModifierFlagOption
+		}
+		if (s.Mod() & gui.KeyModifierControl) != 0 {
+			mask |= 1 << 18 // NSEventModifierFlagControl
+		}
+		if (s.Mod() & gui.KeyModifierSuper) != 0 {
+			mask |= 1 << 20 // NSEventModifierFlagCommand
+		}
+	}
+	return
 }
 
 func registerCallback(w *window, item *gui.MenuItem, nextItemID int) int {
@@ -244,6 +314,14 @@ func testNSMenuTitle(m unsafe.Pointer) string {
 
 func testNSMenuItemIsSeparatorItem(i unsafe.Pointer) bool {
 	return bool(C.test_NSMenuItem_isSeparatorItem(i))
+}
+
+func testNSMenuItemKeyEquivalent(i unsafe.Pointer) string {
+	return C.GoString(C.test_NSMenuItem_keyEquivalent(i))
+}
+
+func testNSMenuItemKeyEquivalentModifierMask(i unsafe.Pointer) uint64 {
+	return uint64(C.ulong(C.test_NSMenuItem_keyEquivalentModifierMask(i)))
 }
 
 func testNSMenuItemSubmenu(i unsafe.Pointer) unsafe.Pointer {

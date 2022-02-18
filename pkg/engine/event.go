@@ -22,6 +22,8 @@ package engine
 
 // HardwareKey contains information associated with physical key events
 // Most applications should use KeyName for cross-platform compatibility.
+// HardwareKey contains information associated with physical key events
+// Most applications should use KeyName for cross-platform compatibility.
 type HardwareKey struct {
 	// ScanCode represents a hardware ID for (normally desktop) keyboard events.
 	ScanCode int

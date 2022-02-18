@@ -29,11 +29,24 @@ import (
 
 // Declare conformity with Shortcut interface
 var _ gui.Shortcut = (*CustomShortcut)(nil)
+var _ gui.KeyboardShortcut = (*CustomShortcut)(nil)
 
 // CustomShortcut describes a shortcut desktop event.
 type CustomShortcut struct {
 	gui.KeyName
-	Modifier
+	Modifier gui.KeyModifier
+}
+
+// Key returns the key name of this shortcut.
+// @implements KeyboardShortcut
+func (cs *CustomShortcut) Key() gui.KeyName {
+	return cs.KeyName
+}
+
+// Mod returns the modifier of this shortcut.
+// @implements KeyboardShortcut
+func (cs *CustomShortcut) Mod() gui.KeyModifier {
+	return cs.Modifier
 }
 
 // ShortcutName returns the shortcut name associated to the event
@@ -46,18 +59,18 @@ func (cs *CustomShortcut) ShortcutName() string {
 	return id.String()
 }
 
-func modifierToString(mods Modifier) string {
+func modifierToString(mods gui.KeyModifier) string {
 	s := []string{}
-	if (mods & ShiftModifier) != 0 {
+	if (mods & gui.KeyModifierShift) != 0 {
 		s = append(s, string("Shift"))
 	}
-	if (mods & ControlModifier) != 0 {
+	if (mods & gui.KeyModifierControl) != 0 {
 		s = append(s, string("Control"))
 	}
-	if (mods & AltModifier) != 0 {
+	if (mods & gui.KeyModifierAlt) != 0 {
 		s = append(s, string("Alt"))
 	}
-	if (mods & SuperModifier) != 0 {
+	if (mods & gui.KeyModifierSuper) != 0 {
 		if runtime.GOOS == "darwin" {
 			s = append(s, string("Command"))
 		} else {

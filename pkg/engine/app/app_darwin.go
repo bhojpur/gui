@@ -25,11 +25,11 @@ package app
 
 /*
 #cgo CFLAGS: -x objective-c
+
 #cgo LDFLAGS: -framework Foundation
 
 #include <stdbool.h>
 #include <stdlib.h>
-
 bool isBundled();
 void sendNotification(char *title, char *content);
 */

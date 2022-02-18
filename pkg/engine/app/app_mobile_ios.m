@@ -1,6 +1,5 @@
-// +build !ci
-
-// +build ios
+//go:build !ci && ios
+// +build !ci,ios
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 

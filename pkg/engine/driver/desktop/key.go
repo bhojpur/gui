@@ -52,18 +52,28 @@ const (
 	KeyCapsLock gui.KeyName = "CapsLock"
 )
 
-// Modifier captures any key modifiers (shift etc) pressed during this key event
-type Modifier int
+// Modifier captures any key modifiers (shift etc.) pressed during a key event
+//
+// Deprecated: Use gui.KeyModifier instead.
+type Modifier = gui.KeyModifier
 
 const (
 	// ShiftModifier represents a shift key being held
-	ShiftModifier Modifier = 1 << iota
+	//
+	// Deprecated: Use gui.KeyModifierShift instead.
+	ShiftModifier = gui.KeyModifierShift
 	// ControlModifier represents the ctrl key being held
-	ControlModifier
+	//
+	// Deprecated: Use gui.KeyModifierControl instead.
+	ControlModifier = gui.KeyModifierControl
 	// AltModifier represents either alt keys being held
-	AltModifier
+	//
+	// Deprecated: Use gui.KeyModifierAlt instead.
+	AltModifier = gui.KeyModifierAlt
 	// SuperModifier represents either super keys being held
-	SuperModifier
+	//
+	// Deprecated: Use gui.KeyModifierSuper instead.
+	SuperModifier = gui.KeyModifierSuper
 )
 
 // Keyable describes any focusable canvas object that can accept desktop key events.

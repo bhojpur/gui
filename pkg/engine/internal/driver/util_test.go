@@ -29,7 +29,6 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/internal/driver"
 	internal_widget "github.com/bhojpur/gui/pkg/engine/internal/widget"
-	"github.com/bhojpur/gui/pkg/engine/layout"
 	_ "github.com/bhojpur/gui/pkg/engine/test"
 	"github.com/bhojpur/gui/pkg/engine/widget"
 
@@ -42,9 +41,9 @@ func TestAbsolutePositionForObject(t *testing.T) {
 	t1r2c1 := widget.NewLabel("row 2 col 1")
 	t1r2c2 := widget.NewLabel("row 2 col 2")
 	t1r2c2.Hide()
-	t1r1 := gui.NewContainer(t1r1c1, t1r1c2)
-	t1r2 := gui.NewContainer(t1r2c1, t1r2c2)
-	tree1 := gui.NewContainer(t1r1, t1r2)
+	t1r1 := container.NewWithoutLayout(t1r1c1, t1r1c2)
+	t1r2 := container.NewWithoutLayout(t1r2c1, t1r2c2)
+	tree1 := container.NewWithoutLayout(t1r1, t1r2)
 
 	t1r1c1.Move(gui.NewPos(111, 111))
 	t1r1c2.Move(gui.NewPos(112, 112))
@@ -58,9 +57,9 @@ func TestAbsolutePositionForObject(t *testing.T) {
 	t2r1c2 := widget.NewLabel("row 1 col 2")
 	t2r2c1 := widget.NewLabel("row 2 col 1")
 	t2r2c2 := widget.NewLabel("row 2 col 2")
-	t2r1 := gui.NewContainer(t2r1c1, t2r1c2)
-	t2r2 := gui.NewContainer(t2r2c1, t2r2c2)
-	tree2 := gui.NewContainer(t2r1, t2r2)
+	t2r1 := container.NewWithoutLayout(t2r1c1, t2r1c2)
+	t2r2 := container.NewWithoutLayout(t2r2c1, t2r2c2)
+	tree2 := container.NewWithoutLayout(t2r1, t2r2)
 
 	t2r1c1.Move(gui.NewPos(211, 211))
 	t2r1c2.Move(gui.NewPos(212, 212))
@@ -72,7 +71,7 @@ func TestAbsolutePositionForObject(t *testing.T) {
 
 	t3r1 := widget.NewLabel("row 1")
 	t3r2 := widget.NewLabel("row 2")
-	tree3 := gui.NewContainer(t3r1, t3r2)
+	tree3 := container.NewWithoutLayout(t3r1, t3r2)
 
 	t3r1.Move(gui.NewPos(31, 31))
 	t3r2.Move(gui.NewPos(32, 32))
@@ -314,12 +313,10 @@ func TestReverseWalkVisibleObjectTree_Clip(t *testing.T) {
 	rect := canvas.NewRectangle(color.White)
 	rect.SetMinSize(gui.NewSize(100, 100))
 	child := canvas.NewRectangle(color.Black)
-	base := gui.NewContainerWithLayout(
-		layout.NewGridLayout(1),
+	base := container.NewGridWithColumns(1,
 		rect,
 		internal_widget.NewScroll(child),
-		gui.NewContainerWithLayout(
-			layout.NewGridLayout(2),
+		container.NewGridWithColumns(2,
 			canvas.NewCircle(color.White),
 			canvas.NewCircle(color.White),
 			canvas.NewCircle(color.White),
@@ -384,12 +381,10 @@ func TestWalkVisibleObjectTree_Clip(t *testing.T) {
 	rect := canvas.NewRectangle(color.White)
 	rect.SetMinSize(gui.NewSize(100, 100))
 	child := canvas.NewRectangle(color.Black)
-	base := gui.NewContainerWithLayout(
-		layout.NewGridLayout(1),
+	base := container.NewGridWithColumns(1,
 		rect,
 		internal_widget.NewScroll(child),
-		gui.NewContainerWithLayout(
-			layout.NewGridLayout(2),
+		container.NewGridWithColumns(2,
 			canvas.NewCircle(color.White),
 			canvas.NewCircle(color.White),
 			canvas.NewCircle(color.White),

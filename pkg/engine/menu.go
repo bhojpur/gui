@@ -44,6 +44,8 @@ type MenuItem struct {
 	Disabled bool
 	// Since: 2.1
 	Checked bool
+	// Since: 2.2
+	Shortcut Shortcut
 }
 
 // NewMenuItem creates a new menu item from the passed label and action parameters.

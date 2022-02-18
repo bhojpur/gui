@@ -100,13 +100,6 @@ func (d *gLDriver) Quit() {
 	close(d.done)
 }
 
-func (d *gLDriver) Run() {
-	if goroutineID() != mainGoroutineID {
-		panic("Run() or ShowAndRun() must be called from main goroutine")
-	}
-	d.runGL()
-}
-
 func (d *gLDriver) addWindow(w *window) {
 	d.windowLock.Lock()
 	defer d.windowLock.Unlock()
@@ -144,9 +137,12 @@ func (d *gLDriver) windowList() []gui.Window {
 func (d *gLDriver) initFailed(msg string, err error) {
 	gui.LogError(msg, err)
 
-	if running() {
+	run.Lock()
+	if !run.flag {
+		run.Unlock()
 		d.Quit()
 	} else {
+		run.Unlock()
 		os.Exit(1)
 	}
 }

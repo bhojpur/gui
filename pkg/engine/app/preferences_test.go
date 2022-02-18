@@ -45,7 +45,7 @@ func TestPreferences_Save(t *testing.T) {
 		val["keyBool"] = true
 	})
 
-	path := filepath.Join(os.TempDir(), "guiPrefs.json")
+	path := filepath.Join(os.TempDir(), "bhojpurPrefs.json")
 	defer os.Remove(path)
 	p.saveToFile(path)
 
@@ -66,7 +66,7 @@ func TestPreferences_Save_OverwriteFast(t *testing.T) {
 		val["key"] = "value"
 	})
 
-	path := filepath.Join(os.TempDir(), "guiPrefs2.json")
+	path := filepath.Join(os.TempDir(), "bhojpurPrefs2.json")
 	defer os.Remove(path)
 	p.saveToFile(path)
 

@@ -1,5 +1,8 @@
-//go:build (!gles && !arm && !arm64) || darwin
+//go:build ((!gles && !arm && !arm64) || darwin) && !js && !wasm && !test_web_driver
 // +build !gles,!arm,!arm64 darwin
+// +build !js
+// +build !wasm
+// +build !test_web_driver
 
 package glfw
 
@@ -23,7 +26,9 @@ package glfw
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import "github.com/go-gl/glfw/v3.3/glfw"
+import (
+	"github.com/go-gl/glfw/v3.3/glfw"
+)
 
 func initWindowHints() {
 	glfw.WindowHint(glfw.ContextVersionMajor, 2)

@@ -28,6 +28,10 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/storage"
 )
 
-func nativeURI(uri string) gui.URI {
-	return storage.NewURI(uri)
+func nativeURI(path string) gui.URI {
+	uri, err := storage.ParseURI(path)
+	if err != nil {
+		gui.LogError("Error on parsing uri", err)
+	}
+	return uri
 }

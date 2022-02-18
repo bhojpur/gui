@@ -1,6 +1,26 @@
 package engine
 
-// KeyName represents the name of a key that has been pressed
+// Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+// KeyName represents the name of a key that has been pressed.
 type KeyName string
 
 const (
@@ -169,8 +189,32 @@ const (
 	KeyBackTick KeyName = "`"
 
 	// KeyUnknown is used for key events where the underlying hardware generated an
-	// event that Bhojpur GUIcould not decode.
+	// event that Bhojpur GUI could not decode.
 	//
 	// Since: 2.1
 	KeyUnknown KeyName = ""
+)
+
+// KeyModifier represents any modifier key (shift etc.) that is being pressed together with a key.
+//
+// Since: 2.2
+type KeyModifier int
+
+const (
+	// KeyModifierShift represents a shift key being held
+	//
+	// Since: 2.2
+	KeyModifierShift KeyModifier = 1 << iota
+	// KeyModifierControl represents the ctrl key being held
+	//
+	// Since: 2.2
+	KeyModifierControl
+	// KeyModifierAlt represents either alt keys being held
+	//
+	// Since: 2.2
+	KeyModifierAlt
+	// KeyModifierSuper represents either super keys being held
+	//
+	// Since: 2.2
+	KeyModifierSuper
 )

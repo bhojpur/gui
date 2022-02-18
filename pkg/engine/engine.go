@@ -20,7 +20,7 @@ package engine
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-// import "github.com/bhojpur/gui/pkg/engine"
+// import gui "github.com/bhojpur/gui/pkg/engine"
 
 // It describes the objects and components available to any Bhojpur GUI application.
 // These can all be created, manipulated and tested without rendering (for speed).

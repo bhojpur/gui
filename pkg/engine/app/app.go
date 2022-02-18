@@ -25,7 +25,7 @@ package app // import "github.com/bhojpur/gui/pkg/engine/app"
 
 import (
 	"strconv"
-	"sync"
+	"sync/atomic"
 	"time"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
@@ -50,9 +50,8 @@ type bhojpurApp struct {
 	storage   *store
 	prefs     gui.Preferences
 
-	running  bool
-	runMutex sync.Mutex
-	exec     func(name string, arg ...string) *execabs.Cmd
+	running uint32 // atomic, 1 == running, 0 == stopped
+	exec    func(name string, arg ...string) *execabs.Cmd
 }
 
 func (a *bhojpurApp) Icon() gui.Resource {
@@ -78,17 +77,10 @@ func (a *bhojpurApp) NewWindow(title string) gui.Window {
 }
 
 func (a *bhojpurApp) Run() {
-	a.runMutex.Lock()
-
-	if a.running {
-		a.runMutex.Unlock()
+	if atomic.CompareAndSwapUint32(&a.running, 0, 1) {
+		a.driver.Run()
 		return
 	}
-
-	a.running = true
-	a.runMutex.Unlock()
-
-	a.driver.Run()
 }
 
 func (a *bhojpurApp) Quit() {
@@ -98,7 +90,7 @@ func (a *bhojpurApp) Quit() {
 
 	a.driver.Quit()
 	a.settings.stopWatching()
-	a.running = false
+	atomic.StoreUint32(&a.running, 0)
 }
 
 func (a *bhojpurApp) Driver() gui.Driver {
@@ -125,7 +117,7 @@ func (a *bhojpurApp) Lifecycle() gui.Lifecycle {
 	return a.lifecycle
 }
 
-// New returns a new Bhojpur GUI application instance with the default driver and no unique ID
+// New returns a new application instance with the default driver and no unique ID
 func New() gui.App {
 	internal.LogHint("Applications should be created with a unique ID using app.NewWithID()")
 	return NewWithID("")

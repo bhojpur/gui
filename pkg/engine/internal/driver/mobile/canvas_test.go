@@ -33,7 +33,6 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/canvas"
 	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/driver/mobile"
-	"github.com/bhojpur/gui/pkg/engine/layout"
 	_ "github.com/bhojpur/gui/pkg/engine/test"
 	"github.com/bhojpur/gui/pkg/engine/theme"
 	"github.com/bhojpur/gui/pkg/engine/widget"
@@ -62,7 +61,7 @@ func TestCanvas_ChildMinSizeChangeAffectsAncestorsUpToRoot(t *testing.T) {
 	rightObj2.SetMinSize(gui.NewSize(100, 50))
 	rightCol := container.NewVBox(rightObj1, rightObj2)
 	content := container.NewHBox(leftCol, rightCol)
-	c.SetContent(gui.NewContainerWithLayout(layout.NewCenterLayout(), content))
+	c.SetContent(container.NewCenter(content))
 	c.Resize(gui.NewSize(300, 300))
 
 	oldContentSize := gui.NewSize(200+theme.Padding(), 100+theme.Padding())
@@ -275,7 +274,7 @@ func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 	}
 
 	c := NewCanvas().(*mobileCanvas)
-	c.SetContent(gui.NewContainerWithLayout(layout.NewMaxLayout(), but))
+	c.SetContent(container.NewMax(but))
 	c.Resize(gui.NewSize(36, 24))
 
 	simulateTap(c)

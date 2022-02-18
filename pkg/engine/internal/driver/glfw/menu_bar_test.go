@@ -29,6 +29,7 @@ import (
 	"testing"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
+	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/internal/driver/glfw"
 	"github.com/bhojpur/gui/pkg/engine/test"
 	"github.com/bhojpur/gui/pkg/engine/widget"
@@ -84,7 +85,7 @@ func TestMenuBar(t *testing.T) {
 			}
 			themeCounter++
 		})
-		container := gui.NewContainerWithoutLayout(button, menuBar)
+		container := container.NewWithoutLayout(button, menuBar)
 		w.SetContent(container)
 		w.Resize(gui.NewSize(300, 300))
 		button.Resize(button.MinSize())
@@ -357,7 +358,7 @@ func TestMenuBar(t *testing.T) {
 			}
 			themeCounter++
 		})
-		container := gui.NewContainerWithoutLayout(button, menuBar)
+		container := container.NewWithoutLayout(button, menuBar)
 		w.SetContent(container)
 		w.Resize(gui.NewSize(300, 300))
 		button.Resize(button.MinSize())
@@ -491,7 +492,7 @@ func TestMenuBar_Toggle(t *testing.T) {
 		w.Resize(gui.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := glfw.NewMenuBar(menu, c)
-		w.SetContent(gui.NewContainerWithoutLayout(menuBar))
+		w.SetContent(container.NewWithoutLayout(menuBar))
 		w.Resize(gui.NewSize(300, 300))
 		menuBar.Resize(gui.NewSize(300, 0).Max(menuBar.MinSize()))
 
@@ -511,7 +512,7 @@ func TestMenuBar_Toggle(t *testing.T) {
 		w.Resize(gui.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := glfw.NewMenuBar(menu, c)
-		w.SetContent(gui.NewContainerWithoutLayout(menuBar))
+		w.SetContent(container.NewWithoutLayout(menuBar))
 		w.Resize(gui.NewSize(300, 300))
 		menuBar.Resize(gui.NewSize(300, 0).Max(menuBar.MinSize()))
 
@@ -532,7 +533,7 @@ func TestMenuBar_Toggle(t *testing.T) {
 		w.Resize(gui.NewSize(300, 300))
 		c := w.Canvas()
 		menuBar := glfw.NewMenuBar(menu, c)
-		w.SetContent(gui.NewContainerWithoutLayout(menuBar))
+		w.SetContent(container.NewWithoutLayout(menuBar))
 		w.Resize(gui.NewSize(300, 300))
 		menuBar.Resize(gui.NewSize(300, 0).Max(menuBar.MinSize()))
 

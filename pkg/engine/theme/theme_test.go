@@ -169,6 +169,12 @@ func Test_ScrollBarSize(t *testing.T) {
 	assert.Equal(t, DarkTheme().Size(SizeNameScrollBar), ScrollBarSize(), "wrong inline icon size")
 }
 
+func Test_DefaultSymbolFont(t *testing.T) {
+	expect := "InterSymbols-Regular.ttf"
+	result := DefaultSymbolFont().Name()
+	assert.Equal(t, expect, result, "wrong default text font")
+}
+
 func Test_DefaultTextFont(t *testing.T) {
 	gui.CurrentApp().Settings().SetTheme(DarkTheme())
 	expect := "NotoSans-Regular.ttf"

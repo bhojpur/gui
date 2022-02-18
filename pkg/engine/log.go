@@ -29,7 +29,7 @@ import (
 // if not nil.
 // The function also reports basic information about the code location.
 func LogError(reason string, err error) {
-	log.Println("Bhojpur GUI error: ", reason)
+	log.Println("Bhojpur GUI engine error: ", reason)
 	if err != nil {
 		log.Println("  Cause:", err)
 	}

@@ -26,9 +26,7 @@ package app
 /*
 #cgo CFLAGS: -x objective-c
 #cgo LDFLAGS: -framework Foundation
-
 #include <AppKit/AppKit.h>
-
 bool isBundled();
 bool isDarkMode();
 void watchTheme();

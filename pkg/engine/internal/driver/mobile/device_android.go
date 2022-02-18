@@ -27,6 +27,8 @@ import gui "github.com/bhojpur/gui/pkg/engine"
 
 const tapYOffset = -12.0 // to compensate for how we hold our fingers on the device
 
+const tapYOffset = -12.0 // to compensate for how we hold our fingers on the device
+
 func (*device) SystemScaleForWindow(_ gui.Window) float32 {
 	if currentDPI >= 600 {
 		return 4

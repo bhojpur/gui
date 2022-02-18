@@ -76,12 +76,13 @@ func gendex() error {
 	if err := os.MkdirAll(tmpdir+"/work/org/golang/app", 0775); err != nil {
 		return err
 	}
-	javaFiles, err := filepath.Glob("../../../../pkg/engine/internal/driver/mobile/app/*.java")
+	lookupPath := "../../../../pkg/engine/internal/driver/mobile/app/*.java"
+	javaFiles, err := filepath.Glob(lookupPath)
 	if err != nil {
 		return err
 	}
 	if len(javaFiles) == 0 {
-		return errors.New("could not find pkg/engine/internal/driver/mobile/app/*.java files")
+		return errors.New("GenDex Engine could not find " + lookupPath)
 	}
 	platform, err := findLast(androidHome + "/platforms")
 	if err != nil {

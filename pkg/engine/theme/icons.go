@@ -700,7 +700,7 @@ func (res *PrimaryThemedResource) Original() gui.Resource {
 }
 
 // DisabledResource is a resource wrapper that will return an appropriate resource colorized by
-// the current theme's `DisabledIconColor` color.
+// the current theme's `DisabledColor` color.
 type DisabledResource struct {
 	source gui.Resource
 }
@@ -715,7 +715,7 @@ func (res *DisabledResource) Content() []byte {
 	return colorizeResource(res.source, DisabledColor())
 }
 
-// NewDisabledResource creates a resource that adapts to the current theme's DisabledIconColor setting.
+// NewDisabledResource creates a resource that adapts to the current theme's DisabledColor setting.
 func NewDisabledResource(res gui.Resource) *DisabledResource {
 	return &DisabledResource{
 		source: res,
@@ -741,7 +741,7 @@ func colorizeResource(res gui.Resource, clr color.Color) []byte {
 	return b
 }
 
-// BhojpurLogo returns a resource containing the Bhojpur Consulting's logo
+// BhojpurLogo returns a resource containing the Bhojpur GUI logo
 func BhojpurLogo() gui.Resource {
 	return bhojpurlogo
 }

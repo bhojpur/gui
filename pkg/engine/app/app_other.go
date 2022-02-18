@@ -1,5 +1,5 @@
-//go:build ci || (!linux && !darwin && !windows && !freebsd && !openbsd && !netbsd)
-// +build ci !linux,!darwin,!windows,!freebsd,!openbsd,!netbsd
+//go:build ci || (!linux && !darwin && !windows && !freebsd && !openbsd && !netbsd && !js && !wasm && !test_web_driver)
+// +build ci !linux,!darwin,!windows,!freebsd,!openbsd,!netbsd,!js,!wasm,!test_web_driver
 
 package app
 
@@ -36,14 +36,14 @@ func defaultVariant() gui.ThemeVariant {
 }
 
 func rootConfigDir() string {
-	return "/tmp/bhojpur-test/"
+	return "/tmp/gui-test/"
 }
 
 func (a *bhojpurApp) OpenURL(_ *url.URL) error {
 	return errors.New("Unable to open url for unknown operating system")
 }
 
-func (a *bhojpurApp) SendNotification(_ *bhojpur.Notification) {
+func (a *bhojpurApp) SendNotification(_ *gui.Notification) {
 	gui.LogError("Refusing to show notification for unknown operating system", nil)
 }
 

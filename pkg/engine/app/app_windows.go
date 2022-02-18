@@ -1,5 +1,5 @@
-//go:build !ci && !android && !ios
-// +build !ci,!android,!ios
+//go:build !ci && !js && !android && !ios && !wasm && !test_web_driver
+// +build !ci,!js,!android,!ios,!wasm,!test_web_driver
 
 package app
 
@@ -42,13 +42,11 @@ import (
 
 const notificationTemplate = `$title = "%s"
 $content = "%s"
-
 [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] > $null
 $template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::ToastText02)
 $toastXml = [xml] $template.GetXml()
 $toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($title)) > $null
 $toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($content)) > $null
-
 $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
 $xml.LoadXml($toastXml.OuterXml)
 $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
@@ -96,7 +94,7 @@ func (a *bhojpurApp) SendNotification(n *gui.Notification) {
 	content := escapeNotificationString(n.Content)
 	appID := a.UniqueID() // TODO once we have an app name compiled in this could be improved
 	if appID == "" || strings.Index(appID, "missing-id") == 0 {
-		appID = "Bhojpur App"
+		appID = "Bhojpur GUI"
 	}
 
 	script := fmt.Sprintf(notificationTemplate, title, content, appID)

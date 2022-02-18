@@ -20,7 +20,11 @@ package test
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import gui "github.com/bhojpur/gui/pkg/engine"
+import (
+	"runtime"
+
+	gui "github.com/bhojpur/gui/pkg/engine"
+)
 
 type device struct {
 }
@@ -42,4 +46,8 @@ func (d *device) SystemScale() float32 {
 
 func (d *device) SystemScaleForWindow(gui.Window) float32 {
 	return 1
+}
+
+func (*device) IsBrowser() bool {
+	return runtime.GOARCH == "js" || runtime.GOOS == "js"
 }

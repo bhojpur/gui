@@ -22,6 +22,7 @@ package common
 
 import (
 	"errors"
+	"fmt"
 	"image/color"
 	"testing"
 
@@ -183,7 +184,7 @@ func TestCanvas_walkTree(t *testing.T) {
 	leftCol.Add(leftNewObj2)
 	deleteAt(rightCol, 1)
 	thirdCol := container.NewVBox()
-	content.AddObject(thirdCol)
+	content.Add(thirdCol)
 	thirdRunBeforePainterData := []nodeInfo{}
 	thirdRunAfterPainterData := []nodeInfo{}
 
@@ -421,5 +422,23 @@ func TestRefreshCount(t *testing.T) { // Issue 2548.
 	}
 	if freed != refresh {
 		t.Fatalf("FreeDirtyTextures left refresh tasks behind in a frame, got %v, want %v", freed, refresh)
+	}
+}
+
+func BenchmarkRefresh(b *testing.B) {
+	c := &Canvas{}
+	c.Initialize(nil, func() {})
+
+	for i := uint64(1); i < 1<<15; i *= 2 {
+		b.Run(fmt.Sprintf("#%d", i), func(b *testing.B) {
+			b.ReportAllocs()
+
+			for j := 0; j < b.N; j++ {
+				for n := uint64(0); n < i; n++ {
+					c.Refresh(canvas.NewRectangle(color.Black))
+				}
+				c.FreeDirtyTextures()
+			}
+		})
 	}
 }

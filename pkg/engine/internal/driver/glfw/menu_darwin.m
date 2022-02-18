@@ -1,3 +1,4 @@
+//go:build !no_native_menus
 // +build !no_native_menus
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
@@ -39,11 +40,11 @@ extern BOOL menuEnabled(int);
 extern BOOL menuChecked(int);
 extern void exceptionCallback(const char*);
 
-@interface BhojpurMenuHandler : NSObject {
+@interface FyneMenuHandler : NSObject {
 }
 @end
 
-@implementation BhojpurMenuHandler
+@implementation FyneMenuHandler
 + (void) tapped:(NSMenuItem*) item {
     menuCallback([item tag]-menuTagMin);
 }
@@ -93,7 +94,7 @@ void handleException(const char* m, id e) {
     exceptionCallback([[NSString stringWithFormat:@"%s failed: %@", m, e] UTF8String]);
 }
 
-const void* insertDarwinMenuItem(const void* m, const char* label, int id, int index, bool isSeparator) {
+const void* insertDarwinMenuItem(const void* m, const char* label, const char* keyEquivalent, unsigned int keyEquivalentModifierMask, int id, int index, bool isSeparator) {
     NSMenu* menu = (NSMenu*)m;
     NSMenuItem* item;
 
@@ -103,8 +104,11 @@ const void* insertDarwinMenuItem(const void* m, const char* label, int id, int i
         item = [[NSMenuItem alloc]
             initWithTitle:[NSString stringWithUTF8String:label]
             action:@selector(tapped:)
-            keyEquivalent:@""];
-        [item setTarget:[BhojpurMenuHandler class]];
+            keyEquivalent:[NSString stringWithUTF8String:keyEquivalent]];
+        if (keyEquivalentModifierMask) {
+            [item setKeyEquivalentModifierMask: keyEquivalentModifierMask];
+        }
+        [item setTarget:[FyneMenuHandler class]];
         [item setTag:id+menuTagMin];
     }
 
@@ -197,6 +201,16 @@ const char* test_NSMenu_title(const void* m) {
 bool test_NSMenuItem_isSeparatorItem(const void* i) {
     NSMenuItem* item = (NSMenuItem*)i;
     return [item isSeparatorItem];
+}
+
+const char* test_NSMenuItem_keyEquivalent(const void *i) {
+    NSMenuItem* item = (NSMenuItem*)i;
+    return [[item keyEquivalent] UTF8String];
+}
+
+unsigned long test_NSMenuItem_keyEquivalentModifierMask(const void *i) {
+    NSMenuItem* item = (NSMenuItem*)i;
+    return [item keyEquivalentModifierMask];
 }
 
 const void* test_NSMenuItem_submenu(const void* i) {

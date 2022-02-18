@@ -29,7 +29,7 @@ import (
 func TestCustomShortcut_Shortcut(t *testing.T) {
 	type fields struct {
 		KeyName  gui.KeyName
-		Modifier Modifier
+		Modifier gui.KeyModifier
 	}
 	tests := []struct {
 		name   string
@@ -40,7 +40,7 @@ func TestCustomShortcut_Shortcut(t *testing.T) {
 			name: "Ctrl+C",
 			fields: fields{
 				KeyName:  gui.KeyC,
-				Modifier: ControlModifier,
+				Modifier: gui.KeyModifierControl,
 			},
 			want: "CustomDesktop:Control+C",
 		},
@@ -48,7 +48,7 @@ func TestCustomShortcut_Shortcut(t *testing.T) {
 			name: "Ctrl+Alt+Esc",
 			fields: fields{
 				KeyName:  gui.KeyEscape,
-				Modifier: ControlModifier + AltModifier,
+				Modifier: gui.KeyModifierControl + gui.KeyModifierAlt,
 			},
 			want: "CustomDesktop:Control+Alt+Escape",
 		},
@@ -69,7 +69,7 @@ func TestCustomShortcut_Shortcut(t *testing.T) {
 func Test_modifierToString(t *testing.T) {
 	tests := []struct {
 		name string
-		mods Modifier
+		mods gui.KeyModifier
 		want string
 	}{
 		{
@@ -79,12 +79,12 @@ func Test_modifierToString(t *testing.T) {
 		},
 		{
 			name: "Ctrl",
-			mods: ControlModifier,
+			mods: gui.KeyModifierControl,
 			want: "Control",
 		},
 		{
 			name: "Shift+Ctrl",
-			mods: ShiftModifier + ControlModifier,
+			mods: gui.KeyModifierShift + gui.KeyModifierControl,
 			want: "Shift+Control",
 		},
 	}

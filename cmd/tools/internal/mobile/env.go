@@ -25,7 +25,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -111,7 +110,7 @@ func envInit() (err error) {
 
 	before115 := false
 	before116 := false
-	ver, err := exec.Command("go", "version").Output()
+	ver, err := execabs.Command("go", "version").Output()
 	if err == nil && string(ver) != "" {
 		fields := strings.Split(string(ver), " ")
 		if len(fields) >= 3 {

@@ -28,7 +28,7 @@ import (
 	"net/url"
 	"os"
 	"runtime"
-	"sync"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -60,9 +60,12 @@ func TestMain(m *testing.M) {
 	go func() {
 		// Wait for GLFW loop to be running.
 		// If we try to create windows before the context is created, this will fail with an exception.
-		for !running() {
-			time.Sleep(10 * time.Millisecond)
+		run.Lock()
+		for !run.flag {
+			run.cond.Wait()
 		}
+		run.Unlock()
+
 		initMainMenu()
 		os.Exit(m.Run())
 	}()
@@ -110,7 +113,7 @@ func TestWindow_ToggleMainMenuByKeyboard(t *testing.T) {
 
 	altPressingMod := glfw.ModAlt
 	altReleasingMod := glfw.ModifierKey(0)
-	// Simulate known issue with GLFW inconsistency
+	// Simulate known issue with GLFW inconsistency https://github.com/glfw/glfw/issues/1630
 	if runtime.GOOS == "linux" {
 		altPressingMod = 0
 		altReleasingMod = glfw.ModAlt
@@ -233,7 +236,7 @@ func TestWindow_ToggleMainMenuByKeyboard(t *testing.T) {
 func TestWindow_Cursor(t *testing.T) {
 	w := createWindow("Test").(*window)
 	e := widget.NewEntry()
-	u, _ := url.Parse("https://testing.bhojpur.net")
+	u, _ := url.Parse("https://testing.gui")
 	h := widget.NewHyperlink("Testing", u)
 	b := widget.NewButton("Test", nil)
 
@@ -1208,21 +1211,16 @@ func TestWindow_TappedIgnoredWhenMovedOffOfTappable(t *testing.T) {
 
 func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 	w := createWindow("Test").(*window)
-	var lock sync.RWMutex
 	waitSingleTapped := make(chan struct{})
 	waitDoubleTapped := make(chan struct{})
-	tapped := 0
+	tapped := int32(0) // atomic
 	but := newDoubleTappableButton()
 	but.OnTapped = func() {
-		lock.Lock()
-		tapped = 1
-		lock.Unlock()
+		atomic.StoreInt32(&tapped, 1)
 		waitSingleTapped <- struct{}{}
 	}
 	but.onDoubleTap = func() {
-		lock.Lock()
-		tapped = 2
-		lock.Unlock()
+		atomic.StoreInt32(&tapped, 2)
 		waitDoubleTapped <- struct{}{}
 	}
 	w.SetContent(container.NewBorder(nil, nil, nil, nil, but))
@@ -1235,13 +1233,8 @@ func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 	w.WaitForEvents()
 	time.Sleep(500 * time.Millisecond)
 
-	lock.RLock()
-	assert.Equal(t, 1, tapped, "Single tap should have fired")
-	lock.RUnlock()
-
-	lock.Lock()
-	tapped = 0
-	lock.Unlock()
+	assert.Equal(t, int32(1), atomic.LoadInt32(&tapped), "Single tap should have fired")
+	atomic.StoreInt32(&tapped, 0)
 
 	w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Press, 0)
 	w.mouseClicked(w.viewport, glfw.MouseButton1, glfw.Release, 0)
@@ -1252,9 +1245,7 @@ func TestWindow_TappedAndDoubleTapped(t *testing.T) {
 	w.WaitForEvents()
 	time.Sleep(500 * time.Millisecond)
 
-	lock.RLock()
-	assert.Equal(t, 2, tapped, "Double tap should have fired")
-	lock.RUnlock()
+	assert.Equal(t, int32(2), atomic.LoadInt32(&tapped), "Double tap should have fired")
 }
 
 func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
@@ -1268,18 +1259,18 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 
 	// On OS X a Ctrl+Click is normally translated into a Right-Click.
 	// The well-known Ctrl+Click for extending a selection is a Cmd+Click there.
-	var superModifier, ctrlModifier desktop.Modifier
+	var superModifier, ctrlModifier gui.KeyModifier
 	if runtime.GOOS == "darwin" {
-		superModifier = desktop.ControlModifier
+		superModifier = gui.KeyModifierControl
 		ctrlModifier = 0
 	} else {
-		superModifier = desktop.SuperModifier
-		ctrlModifier = desktop.ControlModifier
+		superModifier = gui.KeyModifierSuper
+		ctrlModifier = gui.KeyModifierControl
 	}
 
 	tests := map[string]struct {
 		modifier              glfw.ModifierKey
-		expectedEventModifier desktop.Modifier
+		expectedEventModifier gui.KeyModifier
 	}{
 		"no modifier key": {
 			modifier:              0,
@@ -1287,7 +1278,7 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"shift": {
 			modifier:              glfw.ModShift,
-			expectedEventModifier: desktop.ShiftModifier,
+			expectedEventModifier: gui.KeyModifierShift,
 		},
 		"ctrl": {
 			modifier:              glfw.ModControl,
@@ -1295,7 +1286,7 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"alt": {
 			modifier:              glfw.ModAlt,
-			expectedEventModifier: desktop.AltModifier,
+			expectedEventModifier: gui.KeyModifierAlt,
 		},
 		"super": {
 			modifier:              glfw.ModSuper,
@@ -1303,19 +1294,19 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"shift+ctrl": {
 			modifier:              glfw.ModShift | glfw.ModControl,
-			expectedEventModifier: desktop.ShiftModifier | ctrlModifier,
+			expectedEventModifier: gui.KeyModifierShift | ctrlModifier,
 		},
 		"shift+alt": {
 			modifier:              glfw.ModShift | glfw.ModAlt,
-			expectedEventModifier: desktop.ShiftModifier | desktop.AltModifier,
+			expectedEventModifier: gui.KeyModifierShift | gui.KeyModifierAlt,
 		},
 		"shift+super": {
 			modifier:              glfw.ModShift | glfw.ModSuper,
-			expectedEventModifier: desktop.ShiftModifier | superModifier,
+			expectedEventModifier: gui.KeyModifierShift | superModifier,
 		},
 		"ctrl+alt": {
 			modifier:              glfw.ModControl | glfw.ModAlt,
-			expectedEventModifier: ctrlModifier | desktop.AltModifier,
+			expectedEventModifier: ctrlModifier | gui.KeyModifierAlt,
 		},
 		"ctrl+super": {
 			modifier:              glfw.ModControl | glfw.ModSuper,
@@ -1323,27 +1314,27 @@ func TestWindow_MouseEventContainsModifierKeys(t *testing.T) {
 		},
 		"alt+super": {
 			modifier:              glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: desktop.AltModifier | superModifier,
+			expectedEventModifier: gui.KeyModifierAlt | superModifier,
 		},
 		"shift+ctrl+alt": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModAlt,
-			expectedEventModifier: desktop.ShiftModifier | ctrlModifier | desktop.AltModifier,
+			expectedEventModifier: gui.KeyModifierShift | ctrlModifier | gui.KeyModifierAlt,
 		},
 		"shift+ctrl+super": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModSuper,
-			expectedEventModifier: desktop.ShiftModifier | ctrlModifier | superModifier,
+			expectedEventModifier: gui.KeyModifierShift | ctrlModifier | superModifier,
 		},
 		"shift+alt+super": {
 			modifier:              glfw.ModShift | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: desktop.ShiftModifier | desktop.AltModifier | superModifier,
+			expectedEventModifier: gui.KeyModifierShift | gui.KeyModifierAlt | superModifier,
 		},
 		"ctrl+alt+super": {
 			modifier:              glfw.ModControl | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: ctrlModifier | desktop.AltModifier | superModifier,
+			expectedEventModifier: ctrlModifier | gui.KeyModifierAlt | superModifier,
 		},
 		"shift+ctrl+alt+super": {
 			modifier:              glfw.ModShift | glfw.ModControl | glfw.ModAlt | glfw.ModSuper,
-			expectedEventModifier: desktop.ShiftModifier | ctrlModifier | desktop.AltModifier | superModifier,
+			expectedEventModifier: gui.KeyModifierShift | ctrlModifier | gui.KeyModifierAlt | superModifier,
 		},
 	}
 	for name, tt := range tests {
@@ -1636,6 +1627,7 @@ func TestWindow_CloseInterception(t *testing.T) {
 	w.WaitForEvents()
 	assert.False(t, onIntercepted) // The interceptor is not called by the Close.
 	assert.True(t, onClosed)
+	assert.True(t, w.viewport.ShouldClose()) // For #2694
 
 	w.closing = false // fake a fresh window
 	onIntercepted = false
@@ -1686,7 +1678,7 @@ func TestWindow_SetFullScreen(t *testing.T) {
 }
 
 // This test makes our developer screens flash, let's not run it regularly...
-//func TestWindow_Shortcut(t *testing.T) {
+// func TestWindow_Shortcut(t *testing.T) {
 //	w := createWindow("Test")
 //
 //	shortcutFullScreenWindow := &desktop.CustomShortcut{
@@ -1701,7 +1693,7 @@ func TestWindow_SetFullScreen(t *testing.T) {
 //
 //	w.Canvas().(*glCanvas).shortcut.TypedShortcut(shortcutFullScreenWindow)
 //	assert.True(t, w.FullScreen())
-//}
+// }
 
 func createWindow(title string) gui.Window {
 	w := d.CreateWindow(title)

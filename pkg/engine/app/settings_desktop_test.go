@@ -43,7 +43,7 @@ func TestDefaultTheme(t *testing.T) {
 }
 
 func TestEnsureDir(t *testing.T) {
-	tmpDir := testPath("guitest")
+	tmpDir := testPath("bhojpurtest")
 
 	ensureDirExists(tmpDir)
 	if st, err := os.Stat(tmpDir); err != nil || !st.IsDir() {
@@ -68,7 +68,7 @@ func TestWatchSettings(t *testing.T) {
 }
 
 func TestWatchFile(t *testing.T) {
-	path := testPath("gui-temp-watch.txt")
+	path := testPath("bhojpur-temp-watch.txt")
 	f, _ := os.Create(path)
 	f.Close()
 	defer os.Remove(path)
@@ -89,7 +89,7 @@ func TestWatchFile(t *testing.T) {
 }
 
 func TestFileWatcher_FileDeleted(t *testing.T) {
-	path := testPath("gui-temp-watch.txt")
+	path := testPath("bhojpur-temp-watch.txt")
 	f, _ := os.Create(path)
 	f.Close()
 	defer os.Remove(path)

@@ -29,6 +29,10 @@ package async
 // producing speed constantly. However, such a channel may be fairly
 // used for event delivering if the consumer of the channel consumes
 // the incoming forever. Especially, rendering and even processing tasks.
+// UnboundedStructChan is a channel with an unbounded buffer for caching
+// struct{} objects. This implementation is a specialized version that
+// optimizes for struct{} objects than other types. A channel must be
+// closed via Close method.
 type UnboundedStructChan struct {
 	in, out, close chan struct{}
 	n              uint64

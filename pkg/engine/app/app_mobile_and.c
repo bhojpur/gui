@@ -1,6 +1,5 @@
-// +build !ci
-
-// +build android
+//go:build !ci && android
+// +build !ci,android
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 

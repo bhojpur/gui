@@ -41,7 +41,7 @@ void doSendNotification(UNUserNotificationCenter *center, NSString *title, NSStr
     content.body = body;
 
     notifyNum++;
-    NSString *identifier = [NSString stringWithFormat:@"bhojpur-notify-%d", notifyNum];
+    NSString *identifier = [NSString stringWithFormat:@"fyne-notify-%d", notifyNum];
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
         content:content trigger:nil];
 
