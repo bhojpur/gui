@@ -20,7 +20,8 @@ tasks:
         desc: Build the web application
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/guictl client.go 
-        - GOFLAGS=-mod=mod go build -o bin/guisvr server.go 
+        - GOFLAGS=-mod=mod go build -o bin/guisvr server.go
+        # - GOOS=js GOARCH=wasm GOFLAGS=-mod=mod go build -o bin/guiweb internal/main.go 
 
     build-darwin:
         desc: Build the desktop application for current OS

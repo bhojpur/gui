@@ -33,7 +33,7 @@ import (
 	bdf "github.com/bhojpur/gui/pkg/render/document"
 )
 
-var gofpdfDir string
+var bdfDir string
 
 func init() {
 	setRoot()
@@ -48,10 +48,10 @@ func init() {
 func setRoot() {
 	wdStr, err := os.Getwd()
 	if err == nil {
-		gofpdfDir = ""
+		bdfDir = ""
 		list := strings.Split(filepath.ToSlash(wdStr), "/")
 		for j := len(list) - 1; j >= 0 && list[j] != "bdf"; j-- {
-			gofpdfDir = filepath.Join(gofpdfDir, "..")
+			bdfDir = filepath.Join(bdfDir, "..")
 		}
 	} else {
 		panic(err)
@@ -61,12 +61,12 @@ func setRoot() {
 // ImageFile returns a qualified filename in which the path to the image
 // directory is prepended to the specified filename.
 func ImageFile(fileStr string) string {
-	return filepath.Join(gofpdfDir, "image", fileStr)
+	return filepath.Join(bdfDir, "image", fileStr)
 }
 
 // FontDir returns the path to the font directory.
 func FontDir() string {
-	return filepath.Join(gofpdfDir, "font")
+	return filepath.Join(bdfDir, "font")
 }
 
 // FontFile returns a qualified filename in which the path to the font
@@ -78,12 +78,12 @@ func FontFile(fileStr string) string {
 // TextFile returns a qualified filename in which the path to the text
 // directory is prepended to the specified filename.
 func TextFile(fileStr string) string {
-	return filepath.Join(gofpdfDir, "text", fileStr)
+	return filepath.Join(bdfDir, "text", fileStr)
 }
 
 // PdfDir returns the path to the PDF output directory.
 func PdfDir() string {
-	return filepath.Join(gofpdfDir, "pdf")
+	return filepath.Join(bdfDir, "pdf")
 }
 
 // PdfFile returns a qualified filename in which the path to the PDF output

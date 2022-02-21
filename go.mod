@@ -4,14 +4,20 @@ go 1.17
 
 require (
 	github.com/BurntSushi/toml v1.0.0
+	github.com/ByteArena/poly2tri-go v0.0.0-20170716161910-d102ad91854f
 	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9
+	github.com/adrg/sysfont v0.1.2
+	github.com/benoitkugler/textlayout v0.0.9
+	github.com/dsnet/compress v0.0.1
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
+	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81
 	github.com/go-ole/go-ole v1.2.6
 	github.com/godbus/dbus/v5 v5.0.4
 	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gopherjs/gopherjs v0.0.0-20220104163920-15ed2e8cf2bd
 	github.com/jackmordaunt/icns v1.0.0
 	github.com/josephspurrier/goversioninfo v1.4.0
@@ -25,12 +31,16 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44
 	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41
 	github.com/stretchr/testify v1.7.0
+	github.com/tdewolff/minify/v2 v2.10.0
+	github.com/tdewolff/parse/v2 v2.5.27
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mod v0.5.1
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158
+	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
+	gonum.org/v1/plot v0.10.0
 	google.golang.org/grpc v1.43.0
 	google.golang.org/protobuf v1.27.1
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2
@@ -40,11 +50,17 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.0.0 // indirect
+	github.com/adrg/strutil v0.2.3 // indirect
+	github.com/adrg/xdg v0.4.0 // indirect
+	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
 	github.com/akavel/rsrc v0.10.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
+	github.com/fogleman/gg v1.3.0 // indirect
+	github.com/go-fonts/liberation v0.2.0 // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
+	github.com/go-pdf/fpdf v0.5.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -61,7 +77,6 @@ require (
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
-	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20211116232009-f0f3c7e86c11 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
