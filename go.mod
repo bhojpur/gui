@@ -15,7 +15,7 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
 	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81
 	github.com/go-ole/go-ole v1.2.6
-	github.com/godbus/dbus/v5 v5.0.4
+	github.com/godbus/dbus/v5 v5.0.6
 	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
 	github.com/gopherjs/gopherjs v0.0.0-20220104163920-15ed2e8cf2bd
