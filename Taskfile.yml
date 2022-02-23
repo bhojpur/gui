@@ -10,7 +10,7 @@ tasks:
         silent: true
 
     build-tools:
-        desc: Build the web application
+        desc: Build the software tools for build, release of Bhojpur GUI applications
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/guiutl cmd/tools/main.go 
         - chmod 755 bin/guiutl
@@ -21,7 +21,11 @@ tasks:
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/guictl client.go 
         - GOFLAGS=-mod=mod go build -o bin/guisvr server.go
-        # - GOOS=js GOARCH=wasm GOFLAGS=-mod=mod go build -o bin/guiweb internal/main.go 
+
+    build-web-wasm:
+        desc: Build the web application
+        cmds:
+        - GOOS=js GOARCH=wasm GOFLAGS=-mod=mod go build -o bin/guiweb internal/main.go 
 
     build-darwin:
         desc: Build the desktop application for current OS

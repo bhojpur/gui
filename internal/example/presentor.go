@@ -34,11 +34,11 @@ func main() {
 	for _, slide := range presentation.Slide { // for every slide...
 		for _, t := range slide.Text { // process the text elements
 			x, y, size := deck.Dimen(presentation.Canvas, t.Xp, t.Yp, t.Sp)
-			deck.slideText(x, y, size, t)
+			deck.Text(x, y, size, t.Font, t)
 		}
 		for _, l := range slide.List { // process the list elements
 			x, y, size := deck.Dimen(presentation.Canvas, l.Xp, l.Yp, l.Sp)
-			slideList(x, y, size, l)
+			deck.List(x, y, size, l)
 		}
 	}
 }

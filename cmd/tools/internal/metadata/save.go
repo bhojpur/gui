@@ -26,7 +26,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/BurntSushi/toml"
+	"github.com/bhojpur/configure/pkg/toml"
 )
 
 // Save attempts to write a BhojpurApp metadata to the provided writer.

@@ -1,4 +1,4 @@
-package metadata
+package frontend
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -21,39 +21,47 @@ package metadata
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"io"
-	"io/ioutil"
-	"os"
-	"path/filepath"
+	"log"
+	"net"
 
-	"github.com/bhojpur/configure/pkg/toml"
+	"github.com/bhojpur/gui/pkg/engine/widget"
 )
 
-// Load attempts to read a BhojpurApp metadata from the provided reader.
-// If this cannot be done an error will be returned.
-func Load(r io.Reader) (*BhojpurApp, error) {
-	str, err := ioutil.ReadAll(r)
-	if err != nil {
-		return nil, err
+func ConfirmSend(form *widget.Form, btnSave *widget.Button, lblSuccess *widget.Label, lblError *widget.Label, data string) {
+	localhost := defaultConfig.GetDefaultServer()
+	if err := sendData(localhost, data); err != nil {
+		log.Println(err)
+		lblError.SetText(err.Error())
+	} else {
+		lblSuccess.SetText("Saved successfully")
 	}
-
-	var data BhojpurApp
-	if _, err := toml.Decode(string(str), &data); err != nil {
-		return nil, err
-	}
-
-	return &data, nil
 }
 
-// LoadStandard attempts to read a BhojpurApp metadata from the `BhojpurApp.toml` file in the specified dir.
-// If the file cannot be found or parsed an error will be returned.
-func LoadStandard(dir string) (*BhojpurApp, error) {
-	path := filepath.Join(dir, "BhojpurApp.toml")
-	r, err := os.Open(path)
+//sendData sends data to backend server
+func sendData(addr, data string) error {
+	// connect with server
+	conn, err := net.Dial("tcp", addr)
 	if err != nil {
-		return nil, err
+		return fmt.Errorf("Error connecting to backend server: %v\n", err)
 	}
 
-	defer r.Close()
-	return Load(r)
+	// send data to backend server
+	if _, err := conn.Write([]byte(data)); err != nil {
+		return fmt.Errorf("Error sending data to backend server: %v\n", err)
+	}
+
+	log.Printf("Send data: %v\n", data)
+
+	resp := make([]byte, 512)
+	respLen, err := conn.Read(resp)
+	if err != nil && err != io.EOF {
+		return fmt.Errorf("Response error: %v\n", err)
+	}
+
+	log.Println("Packet processing: ", string(resp[:respLen]))
+
+	// close connection
+	return conn.Close()
 }

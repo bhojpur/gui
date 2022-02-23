@@ -1,4 +1,4 @@
-package engine
+package backend
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
 
@@ -19,3 +19,60 @@ package engine
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+
+import (
+	"fmt"
+	"io"
+	"log"
+	"net"
+	"strings"
+)
+
+type Server struct {
+	l net.Listener
+}
+
+//Init initialize Bhojpur GUI server instance
+func (s *Server) Init(addr string) error {
+	var err error
+
+	s.l, err = net.Listen("tcp", addr)
+	if err != nil {
+		return fmt.Errorf("Error start server: %v\n", err)
+	}
+	log.Println("Bhojpur GUI - Server Listener start ", addr)
+
+	return err
+}
+
+//Run start listen connection on server
+func (s *Server) Run() {
+	for {
+		conn, err := s.l.Accept()
+		if err != nil {
+			log.Printf("Accept error: %v\n", err)
+		} else {
+			go s.handlerConn(conn)
+		}
+	}
+}
+
+//handlerConn handler incoming connection
+func (s *Server) handlerConn(c net.Conn) {
+	defer c.Close()
+	buf := make([]byte, 2048)
+	rcvPacketSize, err := c.Read(buf)
+	if err != nil && err != io.EOF {
+		log.Println("Read error: ", err)
+		return
+	}
+	data := buf[:rcvPacketSize]
+
+	rec := strings.Split(string(data), " ")
+	log.Println("Received data from client: ", rec)
+
+	// rec must have 3 field (as at form)
+	if len(rec) <= 3 {
+		log.Printf("Forward record in target system: %v\n", rec)
+	}
+}
