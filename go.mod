@@ -3,7 +3,6 @@ module github.com/bhojpur/gui
 go 1.17
 
 require (
-	github.com/bhojpur/configure v0.0.1
 	github.com/ByteArena/poly2tri-go v0.0.0-20170716161910-d102ad91854f
 	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9
 	github.com/adrg/sysfont v0.1.2
@@ -35,7 +34,7 @@ require (
 	github.com/tdewolff/minify/v2 v2.10.0
 	github.com/tdewolff/parse/v2 v2.5.27
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/yuin/goldmark v1.4.6
+	github.com/yuin/goldmark v1.4.7
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mod v0.5.1
 	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
