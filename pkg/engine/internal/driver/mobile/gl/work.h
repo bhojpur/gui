@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 
 #ifdef os_android
-// TODO: We could include <android/api-level.h> and
+// TODO(crawshaw): We could include <android/api-level.h> and
 // condition on __ANDROID_API__ to get GLES3 headers. However
 // we also need to add -lGLESv3 to LDFLAGS, which we cannot do
 // from inside an ifdef.

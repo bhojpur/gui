@@ -22,7 +22,7 @@ package desktop
 
 import gui "github.com/bhojpur/gui/pkg/engine"
 
-// Canvas defines the desktop specific extensions to a gui.Canvas.
+// Canvas defines the wasm specific extensions to a gui.Canvas.
 type Canvas interface {
 	OnKeyDown() func(*gui.KeyEvent)
 	SetOnKeyDown(func(*gui.KeyEvent))

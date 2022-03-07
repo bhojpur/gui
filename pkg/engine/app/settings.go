@@ -152,7 +152,7 @@ func (s *settings) loadSystemTheme() gui.Theme {
 
 func (s *settings) setupTheme() {
 	name := s.schema.ThemeName
-	if env := os.Getenv("BHOJPUR_THEME"); env != "" {
+	if env := os.Getenv("BHOJPUR_GUI_THEME"); env != "" {
 		name = env
 	}
 

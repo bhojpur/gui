@@ -139,7 +139,7 @@ func TestFileDialogResize(t *testing.T) {
 	//Mimic the fileopen dialog
 	d := &fileDialog{file: file}
 	open := widget.NewButton("open", func() {})
-	ui := gui.NewContainerWithLayout(layout.NewBorderLayout(nil, nil, nil, open), open)
+	ui := container.NewBorder(nil, nil, nil, open)
 	originalSize := ui.MinSize().Add(gui.NewSize(fileIconCellWidth*2+theme.Padding()*4,
 		(fileIconSize+fileTextSize)+theme.Padding()*4))
 	d.win = widget.NewModalPopUp(ui, file.parent.Canvas())

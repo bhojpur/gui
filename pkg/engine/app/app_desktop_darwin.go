@@ -52,7 +52,7 @@ func rootConfigDir() string {
 	homeDir, _ := os.UserHomeDir()
 
 	desktopConfig := filepath.Join(filepath.Join(homeDir, "Library"), "Preferences")
-	return filepath.Join(desktopConfig, "bhojpur")
+	return filepath.Join(desktopConfig, "Bhojpur")
 }
 
 func (a *bhojpurApp) OpenURL(url *url.URL) error {

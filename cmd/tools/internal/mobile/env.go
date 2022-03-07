@@ -29,6 +29,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/bhojpur/gui/cmd/tools/internal/util"
 	gui "github.com/bhojpur/gui/pkg/engine"
 	"golang.org/x/mod/semver"
 
@@ -46,8 +47,10 @@ var (
 	darwinArmNM string
 
 	allArchs = map[string][]string{
-		"android": {"arm", "arm64", "386", "amd64"},
-		"ios":     {"arm64", "amd64"}}
+		"android":      {"arm", "arm64", "386", "amd64"},
+		"ios":          {"arm64"},
+		"iossimulator": {"arm64", "amd64"},
+	}
 
 	bitcodeEnabled bool
 )
@@ -86,7 +89,7 @@ func buildEnvInit() (cleanup func(), err error) {
 		tmpdir = "$WORK"
 		cleanupFn = func() {}
 	} else {
-		tmpdir, err = ioutil.TempDir("", "gomobile-work-")
+		tmpdir, err = ioutil.TempDir("", "bhojpur-work-")
 		if err != nil {
 			return nil, err
 		}
@@ -102,14 +105,17 @@ func buildEnvInit() (cleanup func(), err error) {
 	return cleanupFn, nil
 }
 
+var (
+	before115 = false
+	before116 = false
+)
+
 func envInit() (err error) {
 	// Check the current Go version by go-list.
 	// An arbitrary standard package ('runtime' here) is given to go-list.
 	// This is because go-list tries to analyze the module at the current directory if no packages are given,
-	// and if the module doesn't have any Go file, go-list fails.
+	// and if the module doesn't have any Go file, go-list fails. See golang/go#36668.
 
-	before115 := false
-	before116 := false
 	ver, err := execabs.Command("go", "version").Output()
 	if err == nil && string(ver) != "" {
 		fields := strings.Split(string(ver), " ")
@@ -187,13 +193,13 @@ func envInit() (err error) {
 		}
 	}
 
-	if !xcodeAvailable() {
+	if !xcodeAvailable() || !util.IsIOS(buildTarget) {
 		return nil
 	}
 
 	darwinArmNM = "nm"
 	darwinEnv = make(map[string][]string)
-	for _, arch := range allArchs["ios"] {
+	for _, arch := range allArchs[buildTarget] {
 		var env []string
 		var err error
 		var clang, cflags string
@@ -202,8 +208,13 @@ func envInit() (err error) {
 			env = append(env, "GOARM=7")
 			fallthrough
 		case "arm64":
-			clang, cflags, err = envClang("iphoneos")
-			cflags += " -miphoneos-version-min=" + buildIOSVersion
+			if buildTarget == "ios" {
+				clang, cflags, err = envClang("iphoneos")
+				cflags += " -miphoneos-version-min=" + buildIOSVersion
+			} else { // iossimulator
+				clang, cflags, err = envClang("iphonesimulator")
+				cflags += " -mios-simulator-version-min=" + buildIOSVersion
+			}
 		case "386", "amd64":
 			clang, cflags, err = envClang("iphonesimulator")
 			cflags += " -mios-simulator-version-min=" + buildIOSVersion

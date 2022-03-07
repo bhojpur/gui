@@ -37,11 +37,11 @@ func TestTextureDesktop(t *testing.T) {
 
 	go func() {
 		defer wg.Done()
-		cache.SetTexture(nil, 0, nil)
+		cache.SetTexture(nil, cache.TextureType{}, nil)
 	}()
 	go func() {
 		defer wg.Done()
-		cache.SetTexture(nil, 1, nil)
+		cache.SetTexture(nil, cache.TextureType{}, nil)
 	}()
 
 	wg.Wait()

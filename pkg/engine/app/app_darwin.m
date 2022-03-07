@@ -1,3 +1,4 @@
+//go:build !ci
 // +build !ci
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.

@@ -21,31 +21,77 @@ package commands
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/mcuadros/go-version"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSanitiseName(t *testing.T) {
-	file := "example.png"
-	prefix := "file"
+func Test_CheckGoVersionNoGo(t *testing.T) {
+	commandNil := &testCommandRuns{runs: []mockRunner{}, t: t}
+	assert.Nil(t, checkGoVersion(commandNil, nil))
+	commandNil.verifyExpectation()
 
-	assert.Equal(t, "fileExamplePng", sanitiseName(file, prefix))
+	commandNotNil := &testCommandRuns{runs: []mockRunner{{
+		expectedValue: expectedValue{args: []string{"version"}},
+		mockReturn:    mockReturn{err: fmt.Errorf("file not found")},
+	}}, t: t}
+	assert.NotNil(t, checkGoVersion(commandNotNil, version.NewConstrainGroupFromString(">=1.17")))
+	commandNotNil.verifyExpectation()
 }
 
-func TestSanitiseName_Exported(t *testing.T) {
-	file := "example.png"
-	prefix := "Public"
+func Test_CheckGoVersionValidValue(t *testing.T) {
+	expected := []mockRunner{
+		{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version go1.17.6 windows/amd64")},
+		},
+		{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version go1.17.6 linux/amd64")},
+		}}
 
-	assert.Equal(t, "PublicExamplePng", sanitiseName(file, prefix))
+	versionOk := &testCommandRuns{runs: expected, t: t}
+	assert.Nil(t, checkGoVersion(versionOk, version.NewConstrainGroupFromString(">=1.17")))
+	assert.Nil(t, checkGoVersion(versionOk, version.NewConstrainGroupFromString(">=1.17")))
+	versionOk.verifyExpectation()
+
+	versionNotOk := &testCommandRuns{runs: expected, t: t}
+	assert.NotNil(t, checkGoVersion(versionNotOk, version.NewConstrainGroupFromString("<1.17")))
+	assert.NotNil(t, checkGoVersion(versionNotOk, version.NewConstrainGroupFromString("<1.17")))
+	versionNotOk.verifyExpectation()
 }
 
-func TestSanitiseName_Special(t *testing.T) {
-	file := "a longer name (with-syms).png"
-	prefix := "file"
+func Test_CheckGoVersionInvalidValue(t *testing.T) {
+	tests := map[string]struct {
+		runs []mockRunner
+	}{
+		"Wrong go command output": {runs: []mockRunner{{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("got noversion go1.17.6 windows/amd64")},
+		}}},
+		"Wrong go command length": {runs: []mockRunner{{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version really")},
+		}}},
+		"Wrong version string": {runs: []mockRunner{{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version 1.17.6 windows/amd64")},
+		}}},
+		"No version number": {runs: []mockRunner{{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version gowrong windows/amd64")},
+		}}},
+	}
 
-	assert.Equal(t, "fileALongerNameWithSymsPng", sanitiseName(file, prefix))
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) {
+			versionInvalid := &testCommandRuns{runs: tc.runs, t: t}
+			assert.NotNil(t, checkGoVersion(versionInvalid, version.NewConstrainGroupFromString(">=1.17")))
+			versionInvalid.verifyExpectation()
+		})
+	}
 }
 
 func Test_CheckVersionTableTests(t *testing.T) {
@@ -71,4 +117,92 @@ func Test_CheckVersionTableTests(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_BuildWasmVersion(t *testing.T) {
+	expected := []mockRunner{
+		{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version go1.17.6 windows/amd64")},
+		},
+		{
+			expectedValue: expectedValue{
+				args:  []string{"build"},
+				env:   []string{"GOARCH=wasm", "GOOS=js"},
+				osEnv: true,
+				dir:   "myTest",
+			},
+			mockReturn: mockReturn{ret: []byte("")},
+		},
+	}
+
+	wasmBuildTest := &testCommandRuns{runs: expected, t: t}
+	b := &builder{os: "wasm", srcdir: "myTest", runner: wasmBuildTest}
+	err := b.build()
+	assert.Nil(t, err)
+	wasmBuildTest.verifyExpectation()
+}
+
+func Test_BuildWasmReleaseVersion(t *testing.T) {
+	expected := []mockRunner{
+		{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn: mockReturn{
+				ret: []byte("go version go1.17.6 windows/amd64"),
+			},
+		},
+		{
+			expectedValue: expectedValue{
+				args:  []string{"build", "-tags", "release"},
+				env:   []string{"GOARCH=wasm", "GOOS=js"},
+				osEnv: true,
+				dir:   "myTest",
+			},
+			mockReturn: mockReturn{
+				ret: []byte(""),
+			},
+		},
+	}
+
+	wasmBuildTest := &testCommandRuns{runs: expected, t: t}
+	b := &builder{os: "wasm", srcdir: "myTest", release: true, runner: wasmBuildTest}
+	err := b.build()
+	assert.Nil(t, err)
+	wasmBuildTest.verifyExpectation()
+}
+
+func Test_BuildGopherJSReleaseVersion(t *testing.T) {
+	expected := []mockRunner{
+		{
+			expectedValue: expectedValue{
+				args:  []string{"build", "--tags", "release"},
+				osEnv: true,
+				dir:   "myTest",
+			},
+			mockReturn: mockReturn{
+				ret: []byte(""),
+			},
+		},
+	}
+
+	gopherJSBuildTest := &testCommandRuns{runs: expected, t: t}
+	b := &builder{os: "gopherjs", srcdir: "myTest", release: true, runner: gopherJSBuildTest}
+	err := b.build()
+	assert.Nil(t, err)
+	gopherJSBuildTest.verifyExpectation()
+}
+
+func Test_BuildWasmOldVersion(t *testing.T) {
+	expected := []mockRunner{
+		{
+			expectedValue: expectedValue{args: []string{"version"}},
+			mockReturn:    mockReturn{ret: []byte("go version go1.16.0 windows/amd64")},
+		},
+	}
+
+	wasmBuildTest := &testCommandRuns{runs: expected, t: t}
+	b := &builder{os: "wasm", srcdir: "myTest", runner: wasmBuildTest}
+	err := b.build()
+	assert.NotNil(t, err)
+	wasmBuildTest.verifyExpectation()
 }

@@ -36,14 +36,14 @@ func defaultVariant() gui.ThemeVariant {
 }
 
 func rootConfigDir() string {
-	return "/tmp/gui-test/"
+	return "/tmp/bhojpur-gui-test/"
 }
 
-func (a *bhojpurApp) OpenURL(_ *url.URL) error {
+func (a *guiApp) OpenURL(_ *url.URL) error {
 	return errors.New("Unable to open url for unknown operating system")
 }
 
-func (a *bhojpurApp) SendNotification(_ *gui.Notification) {
+func (a *guiApp) SendNotification(_ *gui.Notification) {
 	gui.LogError("Refusing to show notification for unknown operating system", nil)
 }
 

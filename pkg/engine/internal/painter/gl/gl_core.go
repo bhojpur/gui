@@ -1,7 +1,27 @@
-//go:build (!gles && !arm && !arm64 && !android && !ios && !mobile) || (darwin && !mobile && !ios)
-// +build !gles,!arm,!arm64,!android,!ios,!mobile darwin,!mobile,!ios
+//go:build (!gles && !arm && !arm64 && !android && !ios && !mobile && !js && !test_web_driver && !wasm) || (darwin && !mobile && !ios)
+// +build !gles,!arm,!arm64,!android,!ios,!mobile,!js,!test_web_driver,!wasm darwin,!mobile,!ios
 
 package gl
+
+// Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 import (
 	"fmt"
@@ -23,12 +43,6 @@ type Buffer uint32
 
 // Program represents a compiled GL program
 type Program uint32
-
-// Texture represents an uploaded GL texture
-type Texture uint32
-
-// NoTexture is the zero value for a Texture
-var NoTexture = Texture(0)
 
 var textureFilterToGL = []int32{gl.LINEAR, gl.NEAREST, gl.LINEAR}
 
@@ -136,67 +150,10 @@ func compileShader(source string, shaderType uint32) (uint32, error) {
 	return shader, nil
 }
 
-const (
-	vertexShaderSource = `
-    #version 110
-    attribute vec3 vert;
-    attribute vec2 vertTexCoord;
-    varying vec2 fragTexCoord;
-
-    void main() {
-        fragTexCoord = vertTexCoord;
-
-        gl_Position = vec4(vert, 1);
-    }
-` + "\x00"
-
-	fragmentShaderSource = `
-    #version 110
-    uniform sampler2D tex;
-
-    varying vec2 fragTexCoord;
-
-    void main() {
-        gl_FragColor = texture2D(tex, fragTexCoord);
-    }
-` + "\x00"
-
-	vertexLineShaderSource = `
-    #version 110
-    attribute vec2 vert;
-    attribute vec2 normal;
-    
-    uniform float lineWidth;
-
-    varying vec2 delta;
-
-    void main() {
-        delta = normal * lineWidth;
-
-        gl_Position = vec4(vert + delta, 0, 1);
-    }
-` + "\x00"
-
-	fragmentLineShaderSource = `
-    #version 110
-    uniform vec4 color;
-    uniform float lineWidth;
-    uniform float feather;
-
-    varying vec2 delta;
-
-    void main() {
-        float alpha = color.a;
-        float distance = length(delta);
-
-        if (feather == 0.0 || distance <= lineWidth - feather) {
-           gl_FragColor = color;
-        } else {
-           gl_FragColor = vec4(color.r, color.g, color.b, mix(color.a, 0.0, (distance - (lineWidth - feather)) / feather));
-        }
-    }
-` + "\x00"
-)
+var vertexShaderSource = string(shaderSimpleVert.StaticContent) + "\x00"
+var fragmentShaderSource = string(shaderSimpleFrag.StaticContent) + "\x00"
+var vertexLineShaderSource = string(shaderLineVert.StaticContent) + "\x00"
+var fragmentLineShaderSource = string(shaderLineFrag.StaticContent) + "\x00"
 
 func (p *glPainter) Init() {
 	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)

@@ -26,7 +26,7 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/internal/async"
 )
 
-/// Window defines common functionality for windows.
+// Window defines common functionality for windows.
 type Window struct {
 	eventQueue *async.UnboundedFuncChan
 }

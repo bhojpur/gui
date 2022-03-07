@@ -1,3 +1,4 @@
+//go:build darwin || linux || openbsd || freebsd
 // +build darwin linux openbsd freebsd
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.

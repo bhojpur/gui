@@ -35,7 +35,7 @@ func Version() *cli.Command {
 		Usage: "Shows version information of Bhojpur GUI development tools",
 		Action: func(_ *cli.Context) error {
 			if info, ok := debug.ReadBuildInfo(); ok {
-				fmt.Println("Bhojpur GUI guiutl cli version:", info.Main.Version)
+				fmt.Println("Bhojpur GUI command line interface utility version:", info.Main.Version)
 				return nil
 			}
 

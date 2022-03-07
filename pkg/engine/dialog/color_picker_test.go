@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
-	"github.com/bhojpur/gui/pkg/engine/layout"
+	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/test"
 	"github.com/bhojpur/gui/pkg/engine/theme"
 )
@@ -35,7 +35,7 @@ func Test_colorGreyscalePicker_Layout(t *testing.T) {
 
 	color := newColorGreyscalePicker(nil)
 
-	window := test.NewWindow(gui.NewContainerWithLayout(layout.NewCenterLayout(), color))
+	window := test.NewWindow(container.NewCenter(color))
 	window.Resize(color.MinSize().Max(gui.NewSize(360, 60)))
 
 	test.AssertImageMatches(t, "color/picker_layout_greyscale.png", window.Canvas().Capture())
@@ -49,7 +49,7 @@ func Test_colorBasicPicker_Layout(t *testing.T) {
 
 	color := newColorBasicPicker(nil)
 
-	window := test.NewWindow(gui.NewContainerWithLayout(layout.NewCenterLayout(), color))
+	window := test.NewWindow(container.NewCenter(color))
 	window.Resize(color.MinSize().Max(gui.NewSize(360, 60)))
 
 	test.AssertImageMatches(t, "color/picker_layout_basic.png", window.Canvas().Capture())
@@ -66,7 +66,7 @@ func Test_colorRecentPicker_Layout(t *testing.T) {
 
 	color := newColorRecentPicker(nil)
 
-	window := test.NewWindow(gui.NewContainerWithLayout(layout.NewCenterLayout(), color))
+	window := test.NewWindow(container.NewCenter(color))
 	window.Resize(color.MinSize().Max(gui.NewSize(360, 60)))
 
 	test.AssertImageMatches(t, "color/picker_layout_recent.png", window.Canvas().Capture())
@@ -82,7 +82,7 @@ func Test_colorAdvancedPicker_Layout(t *testing.T) {
 
 	color.Refresh()
 
-	window := test.NewWindow(gui.NewContainerWithLayout(layout.NewCenterLayout(), color))
+	window := test.NewWindow(container.NewCenter(color))
 	window.Resize(color.MinSize().Max(gui.NewSize(200, 200)))
 
 	test.AssertImageMatches(t, "color/picker_layout_advanced.png", window.Canvas().Capture())

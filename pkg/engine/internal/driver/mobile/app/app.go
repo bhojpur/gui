@@ -41,7 +41,7 @@ func Main(f func(App)) {
 	main(f)
 }
 
-// App is how a GUI mobile application interacts with the OS.
+// App is how a Bhojpur GUI mobile application interacts with the OS.
 type App interface {
 	// Events returns the events channel. It carries events from the system to
 	// the app. The type of such events include:

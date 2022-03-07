@@ -21,15 +21,14 @@ package commands
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"image"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/bhojpur/gui/cmd/tools/internal/templates"
-	"github.com/bhojpur/gui/cmd/tools/internal/util"
 	"github.com/jackmordaunt/icns"
-	"github.com/pkg/errors"
 )
 
 type darwinData struct {
@@ -48,7 +47,7 @@ func (p *Packager) packageDarwin() (err error) {
 	info := filepath.Join(contentsDir, "Info.plist")
 	infoFile, err := os.Create(info)
 	if err != nil {
-		return errors.Wrap(err, "Failed to write plist template")
+		return fmt.Errorf("failed to create plist template: %w", err)
 	}
 	defer func() {
 		if r := infoFile.Close(); r != nil && err == nil {
@@ -59,13 +58,13 @@ func (p *Packager) packageDarwin() (err error) {
 	tplData := darwinData{Name: p.name, ExeName: exeName, AppID: p.appID, Version: p.appVersion, Build: p.appBuild,
 		Category: strings.ToLower(p.category)}
 	if err := templates.InfoPlistDarwin.Execute(infoFile, tplData); err != nil {
-		return errors.Wrap(err, "Failed to write plist template")
+		return fmt.Errorf("failed to write plist template: %w", err)
 	}
 
 	macOSDir := util.EnsureSubDir(contentsDir, "MacOS")
 	binName := filepath.Join(macOSDir, exeName)
 	if err := util.CopyExeFile(p.exe, binName); err != nil {
-		return errors.Wrap(err, "Failed to copy exe file")
+		return fmt.Errorf("failed to copy executable: %w", err)
 	}
 
 	resDir := util.EnsureSubDir(contentsDir, "Resources")
@@ -73,16 +72,16 @@ func (p *Packager) packageDarwin() (err error) {
 
 	img, err := os.Open(p.icon)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to open source image \"%s\"", p.icon)
+		return fmt.Errorf("failed to open source image \"%s\": %w", p.icon, err)
 	}
 	defer img.Close()
 	srcImg, _, err := image.Decode(img)
 	if err != nil {
-		return errors.Wrapf(err, "Failed to decode source image")
+		return fmt.Errorf("failed to decode source image: %w", err)
 	}
 	dest, err := os.Create(icnsPath)
 	if err != nil {
-		return errors.Wrap(err, "Failed to open destination file")
+		return fmt.Errorf("failed to open destination file: %w", err)
 	}
 	defer func() {
 		if r := dest.Close(); r != nil && err == nil {
@@ -90,7 +89,7 @@ func (p *Packager) packageDarwin() (err error) {
 		}
 	}()
 	if err := icns.Encode(dest, srcImg); err != nil {
-		return errors.Wrap(err, "Failed to encode icns")
+		return fmt.Errorf("failed to encode icns: %w", err)
 	}
 
 	return nil

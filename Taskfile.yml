@@ -21,11 +21,14 @@ tasks:
         cmds:
         - GOFLAGS=-mod=mod go build -o bin/guictl client.go 
         - GOFLAGS=-mod=mod go build -o bin/guisvr server.go
+        - GOFLAGS=-mod=mod tinygo build -o ./pkg/webui/main.wasm -target wasm ./pkg/webui/main.go 
+        - cp ./pkg/webui/main.wasm internal/wasm
 
     build-web-wasm:
         desc: Build the web application
         cmds:
-        - GOOS=js GOARCH=wasm GOFLAGS=-mod=mod go build -o bin/guiweb internal/main.go 
+        - cd internal; guiutl package -name "Bhojpur GUI" -os wasm -icon Icon.png
+        - cd internal/wasm; ../../bin/guisvr web
 
     build-darwin:
         desc: Build the desktop application for current OS

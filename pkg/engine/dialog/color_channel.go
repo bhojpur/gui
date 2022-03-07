@@ -22,7 +22,7 @@ package dialog
 
 import (
 	"strconv"
-	"sync"
+	"sync/atomic"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
 	"github.com/bhojpur/gui/pkg/engine/canvas"
@@ -172,9 +172,7 @@ func (e *colorChannelEntry) MinSize() gui.Size {
 
 type userChangeEntry struct {
 	widget.Entry
-
-	lock      sync.RWMutex
-	userTyped bool
+	userTyped uint32 // atomic, 0 == false, 1 == true
 }
 
 func newUserChangeEntry(text string) *userChangeEntry {
@@ -186,13 +184,7 @@ func newUserChangeEntry(text string) *userChangeEntry {
 
 func (e *userChangeEntry) setOnChanged(onChanged func(s string)) {
 	e.Entry.OnChanged = func(text string) {
-		e.lock.Lock()
-		userTyped := e.userTyped
-		if userTyped {
-			e.userTyped = false
-		}
-		e.lock.Unlock()
-		if !userTyped {
+		if !atomic.CompareAndSwapUint32(&e.userTyped, 1, 0) {
 			return
 		}
 		if onChanged != nil {
@@ -203,15 +195,11 @@ func (e *userChangeEntry) setOnChanged(onChanged func(s string)) {
 }
 
 func (e *userChangeEntry) TypedRune(r rune) {
-	e.lock.Lock()
-	e.userTyped = true
-	e.lock.Unlock()
+	atomic.StoreUint32(&e.userTyped, 1)
 	e.Entry.TypedRune(r)
 }
 
 func (e *userChangeEntry) TypedKey(ev *gui.KeyEvent) {
-	e.lock.Lock()
-	e.userTyped = true
-	e.lock.Unlock()
+	atomic.StoreUint32(&e.userTyped, 1)
 	e.Entry.TypedKey(ev)
 }

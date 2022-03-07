@@ -31,7 +31,6 @@ import (
 
 	"github.com/bhojpur/gui/cmd/tools/internal/mobile"
 	"github.com/bhojpur/gui/cmd/tools/internal/templates"
-	"github.com/bhojpur/gui/cmd/tools/internal/util"
 	gui "github.com/bhojpur/gui/pkg/engine"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sys/execabs"

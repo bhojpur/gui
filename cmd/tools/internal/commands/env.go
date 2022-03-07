@@ -37,7 +37,7 @@ const guiModule = "github.com/bhojpur/gui/pkg/engine"
 func Env() *cli.Command {
 	return &cli.Command{
 		Name:  "env",
-		Usage: "Prints Bhojpur GUI application module and environment information",
+		Usage: "The env command prints the Bhojpur GUI module and environment information",
 		Action: func(_ *cli.Context) error {
 			workDir, err := os.Getwd()
 			if err != nil {
@@ -61,7 +61,7 @@ func Env() *cli.Command {
 	}
 }
 
-// guiReport defines a custom report for Bhojpur GUI application
+// guiReport defines a custom report for Bhojpur GUI
 type guiReport struct {
 	*report.GoMod
 }

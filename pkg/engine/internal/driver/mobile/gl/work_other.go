@@ -1,6 +1,7 @@
-//go:build (!cgo || (!darwin && !linux && !openbsd && !freebsd)) && !windows
+//go:build (!cgo || (!darwin && !linux && !openbsd && !freebsd)) && !windows && (!js || !wasm)
 // +build !cgo !darwin,!linux,!openbsd,!freebsd
 // +build !windows
+// +build !js !wasm
 
 package gl
 

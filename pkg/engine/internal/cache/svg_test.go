@@ -22,6 +22,7 @@ package cache
 
 import (
 	"image"
+	"sync"
 	"testing"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
@@ -29,10 +30,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func syncMapLen(m *sync.Map) (n int) {
+	m.Range(func(_, _ interface{}) bool {
+		n++
+		return true
+	})
+	return
+}
+
 func TestSvgCacheGet(t *testing.T) {
 	ResetThemeCaches()
 	img := addToCache("empty.svg", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>", 25, 25)
-	assert.Equal(t, 1, len(svgs))
+	assert.Equal(t, 1, syncMapLen(svgs))
 
 	newImg := GetSvg("empty.svg", 25, 25)
 	assert.Equal(t, img, newImg)
@@ -46,7 +55,7 @@ func TestSvgCacheGet(t *testing.T) {
 func TestSvgCacheGet_File(t *testing.T) {
 	ResetThemeCaches()
 	img := addFileToCache("testdata/stroke.svg", 25, 25)
-	assert.Equal(t, 1, len(svgs))
+	assert.Equal(t, 1, syncMapLen(svgs))
 
 	newImg := GetSvg("testdata/stroke.svg", 25, 25)
 	assert.Equal(t, img, newImg)
@@ -60,10 +69,10 @@ func TestSvgCacheGet_File(t *testing.T) {
 func TestSvgCacheReset(t *testing.T) {
 	ResetThemeCaches()
 	_ = addToCache("empty.svg", "<svg xmlns=\"http://www.w3.org/2000/svg\"/>", 25, 25)
-	assert.Equal(t, 1, len(svgs))
+	assert.Equal(t, 1, syncMapLen(svgs))
 
 	ResetThemeCaches()
-	assert.Equal(t, 0, len(svgs))
+	assert.Equal(t, 0, syncMapLen(svgs))
 }
 
 func addFileToCache(path string, w, h int) image.Image {

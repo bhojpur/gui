@@ -27,13 +27,14 @@ import (
 	"strings"
 
 	version "github.com/mcuadros/go-version"
-	"golang.org/x/sys/execabs"
 )
 
 type builder struct {
 	os, srcdir, target string
 	release            bool
 	tags               []string
+
+	runner runner
 }
 
 func checkVersion(output string, versionConstraint *version.ConstraintGroup) error {
@@ -51,12 +52,16 @@ func checkVersion(output string, versionConstraint *version.ConstraintGroup) err
 	return nil
 }
 
-func checkGoVersion(versionConstraint *version.ConstraintGroup) error {
+func isWeb(goos string) bool {
+	return goos == "gopherjs" || goos == "wasm"
+}
+
+func checkGoVersion(runner runner, versionConstraint *version.ConstraintGroup) error {
 	if versionConstraint == nil {
 		return nil
 	}
 
-	goVersion, err := execabs.Command("go", "version").CombinedOutput()
+	goVersion, err := runner.runOutput("version")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", string(goVersion))
 		return err
@@ -73,20 +78,33 @@ func (b *builder) build() error {
 		goos = targetOS()
 	}
 
+	if b.runner == nil {
+		if goos != "gopherjs" {
+			b.runner = newCommand("go")
+		} else {
+			b.runner = newCommand("gopherjs")
+		}
+	}
+
 	args := []string{"build"}
-	env := append(os.Environ(), "CGO_ENABLED=1") // in case someone is trying to cross-compile...
+	env := os.Environ()
+
 	if goos == "darwin" {
 		env = append(env, "CGO_CFLAGS=-mmacosx-version-min=10.11", "CGO_LDFLAGS=-mmacosx-version-min=10.11")
 	}
 
-	if goos == "windows" {
-		if b.release {
-			args = append(args, "-ldflags", "-s -w -H=windowsgui")
-		} else {
-			args = append(args, "-ldflags", "-H=windowsgui")
+	if !isWeb(goos) {
+		env = append(env, "CGO_ENABLED=1") // in case someone is trying to cross-compile...
+
+		if goos == "windows" {
+			if b.release {
+				args = append(args, "-ldflags", "-s -w -H=windowsgui")
+			} else {
+				args = append(args, "-ldflags", "-H=windowsgui")
+			}
+		} else if b.release {
+			args = append(args, "-ldflags", "-s -w")
 		}
-	} else if b.release {
-		args = append(args, "-ldflags", "-s -w")
 	}
 
 	if b.target != "" {
@@ -99,10 +117,15 @@ func (b *builder) build() error {
 		tags = append(tags, "release")
 	}
 	if len(tags) > 0 {
-		args = append(args, "-tags", strings.Join(tags, ","))
+		if goos == "gopherjs" {
+			args = append(args, "--tags")
+		} else {
+			args = append(args, "-tags")
+		}
+		args = append(args, strings.Join(tags, ","))
 	}
 
-	if goos != "ios" && goos != "android" && goos != "wasm" {
+	if goos != "ios" && goos != "android" && !isWeb(goos) {
 		env = append(env, "GOOS="+goos)
 	} else if goos == "wasm" {
 		versionConstraint = version.NewConstrainGroupFromString(">=1.17")
@@ -110,15 +133,13 @@ func (b *builder) build() error {
 		env = append(env, "GOOS=js")
 	}
 
-	if err := checkGoVersion(versionConstraint); err != nil {
+	if err := checkGoVersion(b.runner, versionConstraint); err != nil {
 		return err
 	}
 
-	cmd := execabs.Command("go", args...)
-
-	cmd.Dir = b.srcdir
-	cmd.Env = env
-	out, err := cmd.CombinedOutput()
+	b.runner.setDir(b.srcdir)
+	b.runner.setEnv(env)
+	out, err := b.runner.runOutput(args...)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", string(out))
 	}

@@ -1,6 +1,3 @@
-// It provides implementations for working with Bhojpur GUI application.
-// The fastest way to get started is to call app.New() which will normally load a new desktop application.
-// If the "ci" tag is passed to Go (go run -tags ci myapp.go) it will run an in-memory application.
 package app // import "github.com/bhojpur/gui/pkg/engine/app"
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
@@ -23,6 +20,11 @@ package app // import "github.com/bhojpur/gui/pkg/engine/app"
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// It provides implementations for working with Bhojpur GUI application framework.
+// The fastest way to get started is to call app.New() which will normally load a
+// new desktop application. If the "ci" tag is passed to Go (go run -tags ci myapp.go)
+// it will run an in-memory application.
+
 import (
 	"strconv"
 	"sync/atomic"
@@ -37,7 +39,7 @@ import (
 	"golang.org/x/sys/execabs"
 )
 
-// Declare conformity with App interface
+// Declare conformity with Bhojpur GUI application interface
 var _ gui.App = (*bhojpurApp)(nil)
 
 type bhojpurApp struct {
@@ -117,7 +119,7 @@ func (a *bhojpurApp) Lifecycle() gui.Lifecycle {
 	return a.lifecycle
 }
 
-// New returns a new application instance with the default driver and no unique ID
+// New returns a new Bhojpur GUI application instance with the default driver and no unique ID
 func New() gui.App {
 	internal.LogHint("Applications should be created with a unique ID using app.NewWithID()")
 	return NewWithID("")

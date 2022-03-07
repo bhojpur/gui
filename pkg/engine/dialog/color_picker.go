@@ -27,7 +27,6 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/canvas"
 	"github.com/bhojpur/gui/pkg/engine/container"
 	col "github.com/bhojpur/gui/pkg/engine/internal/color"
-	"github.com/bhojpur/gui/pkg/engine/layout"
 	"github.com/bhojpur/gui/pkg/engine/theme"
 	"github.com/bhojpur/gui/pkg/engine/widget"
 )
@@ -193,14 +192,14 @@ func (p *colorAdvancedPicker) CreateRenderer() gui.WidgetRenderer {
 		}
 	})
 
-	contents := gui.NewContainerWithLayout(layout.NewPaddedLayout(), container.NewVBox(
+	contents := container.NewPadded(container.NewVBox(
 		container.NewGridWithColumns(3,
-			gui.NewContainerWithLayout(layout.NewPaddedLayout(), wheel),
+			container.NewPadded(wheel),
 			hslBox,
 			rgbBox),
 		container.NewGridWithColumns(3,
-			gui.NewContainerWithLayout(layout.NewPaddedLayout(),
-				gui.NewContainerWithLayout(layout.NewMaxLayout(),
+			container.NewPadded(
+				container.NewMax(
 					newCheckeredBackground(),
 					preview,
 				),

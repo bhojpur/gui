@@ -44,7 +44,7 @@ func Bundle() *cli.Command {
 
 	return &cli.Command{
 		Name:        "bundle",
-		Usage:       "Embeds static content into your Go application",
+		Usage:       "Embeds static content into your Go application.",
 		Description: "Each resource will have a generated filename unless specified.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -97,14 +97,14 @@ func (b *Bundler) AddFlags() {
 	flag.StringVar(&b.out, "o", "", "Specify an output file instead of printing to standard output")
 	flag.StringVar(&b.pkg, "package", "main", "The package to output in headers (if not appending)")
 	flag.StringVar(&b.prefix, "prefix", "resource", "A prefix for variables (ignored if name is set)")
-	flag.BoolVar(&b.noheader, "append", false, "Append an existing go file (don't output headers)")
+	flag.BoolVar(&b.noheader, "append", false, "Append an existing Go file (don't output headers)")
 }
 
 // PrintHelp prints the help message for the bundle command.
 //
 // Deprecated: Access to the individual cli commands are being removed.
 func (b *Bundler) PrintHelp(indent string) {
-	fmt.Println(indent, "The bundle command embeds static content into your go application.")
+	fmt.Println(indent, "The bundle command embeds static content into your Go application.")
 	fmt.Println(indent, "Each resource will have a generated filename unless specified")
 	fmt.Println(indent, "Command usage: guiutl bundle [parameters] file|directory")
 }

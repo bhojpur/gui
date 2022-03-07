@@ -21,6 +21,7 @@ package commands
 // THE SOFTWARE.
 
 import (
+	"fmt"
 	"image"
 	"os"
 	"path/filepath"
@@ -29,7 +30,6 @@ import (
 	ico "github.com/Kodeworks/golang-image-ico"
 	"github.com/bhojpur/gui/cmd/tools/internal/templates"
 	"github.com/josephspurrier/goversioninfo"
-	"github.com/pkg/errors"
 	"golang.org/x/sys/execabs"
 )
 
@@ -44,28 +44,28 @@ func (p *Packager) packageWindows() error {
 	// convert icon
 	img, err := os.Open(p.icon)
 	if err != nil {
-		return errors.Wrap(err, "Failed to open source image")
+		return fmt.Errorf("failed to open source image: %w", err)
 	}
 	defer img.Close()
 	srcImg, _, err := image.Decode(img)
 	if err != nil {
-		return errors.Wrap(err, "Failed to decode source image")
+		return fmt.Errorf("failed to decode source image: %w", err)
 	}
 
 	icoPath := filepath.Join(exePath, p.name+".ico")
 	file, err := os.Create(icoPath)
 	if err != nil {
-		return errors.Wrap(err, "Failed to open image file")
+		return fmt.Errorf("failed to open image file: %w", err)
 	}
 
 	err = ico.Encode(file, srcImg)
 	if err != nil {
-		return errors.Wrap(err, "Failed to encode icon")
+		return fmt.Errorf("failed to encode icon: %w", err)
 	}
 
 	err = file.Close()
 	if err != nil {
-		return errors.Wrap(err, "Failed to close image file")
+		return fmt.Errorf("failed to close image file: %w", err)
 	}
 
 	// write manifest
@@ -81,7 +81,7 @@ func (p *Packager) packageWindows() error {
 		}
 		err := templates.ManifestWindows.Execute(manifestFile, tplData)
 		if err != nil {
-			return errors.Wrap(err, "Failed to write manifest template")
+			return fmt.Errorf("failed to write manifest template: %w", err)
 		}
 	}
 
@@ -103,23 +103,23 @@ func (p *Packager) packageWindows() error {
 
 	err = vi.WriteSyso(outPath, arch)
 	if err != nil {
-		return errors.Wrap(err, "Failed to write .syso file")
+		return fmt.Errorf("failed to write .syso file: %w", err)
 	}
 	defer os.Remove(outPath)
 
 	err = os.Remove(icoPath)
 	if err != nil {
-		return errors.Wrap(err, "Failed to remove icon")
+		return fmt.Errorf("failed to remove icon: %w", err)
 	} else if manifestGenerated {
 		err := os.Remove(manifest)
 		if err != nil {
-			return errors.Wrap(err, "Failed to remove manifest")
+			return fmt.Errorf("failed to remove manifest: %w", err)
 		}
 	}
 
-	err = p.buildPackage()
+	_, err = p.buildPackage(nil)
 	if err != nil {
-		return errors.Wrap(err, "Failed to rebuild after adding metadata")
+		return fmt.Errorf("failed to rebuild after adding metadata: %w", err)
 	}
 
 	appPath := p.exe
@@ -136,7 +136,7 @@ func (p *Packager) packageWindows() error {
 	if p.install {
 		err := runAsAdminWindows("copy", "\"\""+appPath+"\"\"", "\"\""+filepath.Join(p.dir, appName)+"\"\"")
 		if err != nil {
-			return errors.Wrap(err, "Failed to run as administrator")
+			return fmt.Errorf("failed to run as administrator: %w", err)
 		}
 	}
 	return nil

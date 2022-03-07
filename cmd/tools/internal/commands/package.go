@@ -21,6 +21,7 @@ package commands
 // THE SOFTWARE.
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	_ "image/jpeg" // import image encodings
@@ -32,13 +33,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/mod/modfile"
 	"golang.org/x/mod/module"
 
 	"github.com/bhojpur/gui/cmd/tools/internal/metadata"
-	"github.com/bhojpur/gui/cmd/tools/internal/util"
 )
 
 const (
@@ -46,19 +45,19 @@ const (
 	defaultAppVersion = "1.0.0"
 )
 
-// Package returns the cli command for packaging Bhojpur GUI applications
+// Package returns the CLI command for packaging Bhojpur GUI applications
 func Package() *cli.Command {
 	p := &Packager{}
 
 	return &cli.Command{
 		Name:        "package",
-		Usage:       "Packages a Bhojpur GUI application for distribution",
+		Usage:       "Packages a Bhojpur GUI application for distribution.",
 		Description: "You may specify the -executable to package, otherwise -sourceDir will be built.",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "target",
 				Aliases:     []string{"os"},
-				Usage:       "The mobile platform to target (android, android/arm, android/arm64, android/amd64, android/386, ios).",
+				Usage:       "The mobile platform to target (android, android/arm, android/arm64, android/amd64, android/386, ios, iossimulator).",
 				Destination: &p.os,
 			},
 			&cli.StringFlag{
@@ -128,7 +127,7 @@ func Package() *cli.Command {
 	}
 }
 
-// Packager wraps executables into full Bhojpur GUI app packages.
+// Packager wraps executables into full GUI app packages.
 type Packager struct {
 	name, srcDir, dir, exe, icon string
 	os, appID, appVersion        string
@@ -142,7 +141,7 @@ type Packager struct {
 //
 // Deprecated: Access to the individual cli commands are being removed.
 func (p *Packager) AddFlags() {
-	flag.StringVar(&p.os, "os", "", "The operating system to target (android, android/arm, android/arm64, android/amd64, android/386, darwin, freebsd, ios, linux, netbsd, openbsd, windows)")
+	flag.StringVar(&p.os, "os", "", "The operating system to target (android, android/arm, android/arm64, android/amd64, android/386, darwin, freebsd, ios, linux, netbsd, openbsd, windows, wasm)")
 	flag.StringVar(&p.exe, "executable", "", "Specify an existing binary instead of building before package")
 	flag.StringVar(&p.srcDir, "sourceDir", "", "The directory to package, if executable is not set")
 	flag.StringVar(&p.name, "name", "", "The name of the application, default is the executable file name")
@@ -173,7 +172,7 @@ func (p *Packager) Run(_ []string) {
 		os.Exit(1)
 	}
 
-	err = p.doPackage()
+	err = p.doPackage(nil)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s\n", err.Error())
 		os.Exit(1)
@@ -191,7 +190,7 @@ func (p *Packager) Package() error {
 }
 
 func (p *Packager) packageWithoutValidate() error {
-	err := p.doPackage()
+	err := p.doPackage(nil)
 	if err != nil {
 		return err
 	}
@@ -204,23 +203,60 @@ func (p *Packager) packageWithoutValidate() error {
 	return metadata.SaveStandard(data, p.srcDir)
 }
 
-func (p *Packager) buildPackage() error {
-	tags := strings.Split(p.tags, ",")
-	b := &builder{
-		os:      p.os,
-		srcdir:  p.srcDir,
-		release: p.release,
-		tags:    tags,
+func (p *Packager) buildPackage(runner runner) ([]string, error) {
+	var tags []string
+	if p.tags != "" {
+		tags = strings.Split(p.tags, ",")
+	}
+	if p.os != "web" {
+		b := &builder{
+			os:      p.os,
+			srcdir:  p.srcDir,
+			target:  p.exe,
+			release: p.release,
+			tags:    tags,
+			runner:  runner,
+		}
+
+		return []string{p.exe}, b.build()
 	}
 
-	return b.build()
+	bWasm := &builder{
+		os:      "wasm",
+		srcdir:  p.srcDir,
+		target:  p.exe + ".wasm",
+		release: p.release,
+		tags:    tags,
+		runner:  runner,
+	}
+
+	err := bWasm.build()
+	if err != nil {
+		return nil, err
+	}
+
+	bGopherJS := &builder{
+		os:      "gopherjs",
+		srcdir:  p.srcDir,
+		target:  p.exe + ".js",
+		release: p.release,
+		tags:    tags,
+		runner:  runner,
+	}
+
+	err = bGopherJS.build()
+	if err != nil {
+		return nil, err
+	}
+
+	return []string{bWasm.target, bGopherJS.target}, nil
 }
 
 func (p *Packager) combinedVersion() string {
 	return fmt.Sprintf("%s.%d", p.appVersion, p.appBuild)
 }
 
-func (p *Packager) doPackage() error {
+func (p *Packager) doPackage(runner runner) error {
 	// sensible defaults - validation deemed them optional
 	if p.appVersion == "" {
 		p.appVersion = defaultAppVersion
@@ -230,15 +266,17 @@ func (p *Packager) doPackage() error {
 	}
 
 	if !util.Exists(p.exe) && !util.IsMobile(p.os) {
-		err := p.buildPackage()
+		files, err := p.buildPackage(runner)
 		if err != nil {
-			return errors.Wrap(err, "Error building application")
+			return fmt.Errorf("error building application: %w", err)
 		}
-		if !util.Exists(p.exe) {
-			return fmt.Errorf("unable to build directory to expected executable, %s", p.exe)
+		for _, file := range files {
+			if p.os != "web" && !util.Exists(file) {
+				return fmt.Errorf("unable to build directory to expected executable, %s", file)
+			}
 		}
 		if p.os != "windows" {
-			defer p.removeBuild()
+			defer p.removeBuild(files)
 		}
 	}
 
@@ -251,17 +289,25 @@ func (p *Packager) doPackage() error {
 		return p.packageWindows()
 	case "android/arm", "android/arm64", "android/amd64", "android/386", "android":
 		return p.packageAndroid(p.os)
-	case "ios":
-		return p.packageIOS()
+	case "ios", "iossimulator":
+		return p.packageIOS(p.os)
+	case "wasm":
+		return p.packageWasm()
+	case "gopherjs":
+		return p.packageGopherJS()
+	case "web":
+		return p.packageWeb()
 	default:
 		return fmt.Errorf("unsupported target operating system \"%s\"", p.os)
 	}
 }
 
-func (p *Packager) removeBuild() {
-	err := os.Remove(p.exe)
-	if err != nil {
-		log.Println("Unable to remove temporary build file", p.exe)
+func (p *Packager) removeBuild(files []string) {
+	for _, file := range files {
+		err := os.Remove(file)
+		if err != nil {
+			log.Println("Unable to remove temporary build file", p.exe)
+		}
 	}
 }
 
@@ -271,7 +317,7 @@ func (p *Packager) validate() error {
 	}
 	baseDir, err := os.Getwd()
 	if err != nil {
-		return errors.Wrap(err, "Unable to get the current directory, needed to find main executable")
+		return fmt.Errorf("unable to get the current directory, needed to find main executable: %w", err)
 	}
 	if p.dir == "" {
 		p.dir = baseDir
@@ -279,8 +325,8 @@ func (p *Packager) validate() error {
 	if p.srcDir == "" {
 		p.srcDir = baseDir
 	} else if p.os == "ios" || p.os == "android" {
-		return errors.New("Parameter -sourceDir is currently not supported for mobile builds.\n" +
-			"Change directory to the main package and try again.")
+		return errors.New("parameter -sourceDir is currently not supported for mobile builds. " +
+			"Change directory to the main package and try again")
 	}
 
 	data, err := metadata.LoadStandard(p.srcDir)
@@ -294,13 +340,13 @@ func (p *Packager) validate() error {
 		p.exe = filepath.Join(p.srcDir, exeName)
 
 		if util.Exists(p.exe) { // the exe was not specified, assume stale
-			p.removeBuild()
+			p.removeBuild([]string{p.exe})
 		}
 	} else if p.os == "ios" || p.os == "android" {
 		_, _ = fmt.Fprint(os.Stderr, "Parameter -executable is ignored for mobile builds.\n")
 	}
 
-	if p.name == "" {
+	if p.name == "" || p.os == "wasm" || p.os == "gopherjs" || p.os == "web" {
 		p.name = exeName
 	}
 	if p.icon == "" || p.icon == "Icon.png" {
@@ -338,6 +384,10 @@ func calculateExeName(sourceDir, os string) string {
 
 	if os == "windows" {
 		exeName = exeName + ".exe"
+	} else if os == "wasm" {
+		exeName = exeName + ".wasm"
+	} else if os == "gopherjs" {
+		exeName = exeName + ".js"
 	}
 
 	return exeName
@@ -378,12 +428,12 @@ func validateAppID(appID, os, name string, release bool) (string, error) {
 	// old darwin compatibility
 	if os == "darwin" {
 		if appID == "" {
-			return "net.bhojpur." + name, nil
+			return "com.example." + name, nil
 		}
 	} else if os == "ios" || util.IsAndroid(os) || (os == "windows" && release) {
 		// all mobile, and for windows when releasing, needs a unique id - usually reverse DNS style
 		if appID == "" {
-			return "", errors.New("Missing appID parameter for package")
+			return "", errors.New("missing appID parameter for package")
 		} else if !strings.Contains(appID, ".") {
 			return "", errors.New("appID must be globally unique and contain at least 1 '.'")
 		}

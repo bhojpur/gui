@@ -27,7 +27,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bhojpur/gui/cmd/tools/internal/util"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 	"golang.org/x/sys/execabs"
@@ -65,13 +64,15 @@ func Get() *cli.Command {
 	}
 }
 
-// Getter is the command that can handle downloading and installing Bhojpur GUI apps to the current platform.
+// Getter is the command that can handle downloading and installing Bhojpur GUI
+// applications to the current platform.
 type Getter struct {
 	icon, appID string
 }
 
-// NewGetter returns a command that can handle the download and install of GUI apps built using Bhojpur GUI.
-// It depends on a Go and C compiler installed at this stage and takes a single, package, parameter to identify the app.
+// NewGetter returns a command that can handle the download and install of applications
+// built using Bhojpur GUI. It depends on a Go and C compiler installed at this stage
+// and takes a single, package, parameter to identify the application.
 func NewGetter() *Getter {
 	return &Getter{}
 }
@@ -94,7 +95,7 @@ func (g *Getter) Get(pkg string) error {
 
 	install := &Installer{srcDir: path, icon: g.icon, appID: g.appID, release: true}
 	if err := install.validate(); err != nil {
-		return errors.Wrap(err, "Failed to set up installer")
+		return fmt.Errorf("failed to set up installer: %w", err)
 	}
 
 	return install.install()

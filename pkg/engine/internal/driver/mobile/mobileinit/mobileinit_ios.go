@@ -32,10 +32,8 @@ import (
 /*
 #cgo CFLAGS: -x objective-c
 #cgo LDFLAGS: -framework Foundation
-
 #include <asl.h>
 #include <stdlib.h>
-
 void log_wrap(const char *logStr);
 */
 import "C"

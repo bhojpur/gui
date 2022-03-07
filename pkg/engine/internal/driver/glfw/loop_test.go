@@ -1,5 +1,5 @@
-//go:build !ci && !mobile
-// +build !ci,!mobile
+//go:build !ci && !mobile && !js && !wasm
+// +build !ci,!mobile,!js,!wasm
 
 package glfw
 

@@ -25,7 +25,7 @@ import (
 	"testing"
 
 	gui "github.com/bhojpur/gui/pkg/engine"
-	"github.com/bhojpur/gui/pkg/engine/layout"
+	"github.com/bhojpur/gui/pkg/engine/container"
 	"github.com/bhojpur/gui/pkg/engine/test"
 	"github.com/bhojpur/gui/pkg/engine/theme"
 )
@@ -53,7 +53,7 @@ func Test_colorButton_Layout(t *testing.T) {
 				color.MouseIn(nil)
 			}
 
-			window := test.NewWindow(gui.NewContainerWithLayout(layout.NewCenterLayout(), color))
+			window := test.NewWindow(container.NewCenter(color))
 			window.Resize(color.MinSize().Max(gui.NewSize(50, 50)))
 
 			test.AssertImageMatches(t, "color/button_layout_"+name+".png", window.Canvas().Capture())

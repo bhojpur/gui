@@ -41,14 +41,14 @@ func Install() *cli.Command {
 
 	return &cli.Command{
 		Name:  "install",
-		Usage: "Packages a Bhojpur GUI application and installs it",
-		Description: `The install command packages a Bhojpur GUI application for the current platform and copies it
+		Usage: "Packages a GUI application, and installs a GUI application.",
+		Description: `The install command packages a GUI application for the current platform and copies it
 		into the system location for applications. This can be overridden with installDir`,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "target",
 				Aliases:     []string{"os"},
-				Usage:       "The mobile platform to target (android, android/arm, android/arm64, android/amd64, android/386, ios).",
+				Usage:       "The mobile platform to target (android, android/arm, android/arm64, android/amd64, android/386, ios, iossimulator).",
 				Destination: &i.os,
 			},
 			&cli.StringFlag{
@@ -59,7 +59,7 @@ func Install() *cli.Command {
 			},
 			&cli.StringFlag{
 				Name:        "icon",
-				Usage:       "The name of the application icon file.",
+				Usage:       "The name of the GUI application icon file.",
 				Value:       "",
 				Destination: &i.icon,
 			},
@@ -101,7 +101,7 @@ func (i *Installer) AddFlags() {
 //
 // Deprecated: Access to the individual cli commands are being removed.
 func (i *Installer) PrintHelp(indent string) {
-	fmt.Println(indent, "The install command packages an application for the current platform and copies it")
+	fmt.Println(indent, "The install command packages a GUI application for the current platform and copies it")
 	fmt.Println(indent, "into the system location for applications. This can be overridden with installDir")
 	fmt.Println(indent, "Command usage: guiutl install [parameters]")
 }
@@ -150,7 +150,7 @@ func (i *Installer) install() error {
 	p := i.Packager
 
 	if i.os != "" {
-		if i.os == "ios" {
+		if util.IsIOS(i.os) {
 			return i.installIOS()
 		} else if strings.Index(i.os, "android") == 0 {
 			return i.installAndroid()
@@ -182,7 +182,7 @@ func (i *Installer) install() error {
 	}
 
 	p.dir = i.installDir
-	err := p.doPackage()
+	err := p.doPackage(nil)
 	if err != nil {
 		return err
 	}
@@ -195,7 +195,7 @@ func (i *Installer) installAndroid() error {
 
 	_, err := os.Stat(target)
 	if os.IsNotExist(err) {
-		err := i.Packager.doPackage()
+		err := i.Packager.doPackage(nil)
 		if err != nil {
 			return nil
 		}
@@ -206,15 +206,21 @@ func (i *Installer) installAndroid() error {
 
 func (i *Installer) installIOS() error {
 	target := mobile.AppOutputName(i.os, i.Packager.name)
-	_, err := os.Stat(target)
-	if os.IsNotExist(err) {
-		err := i.Packager.doPackage()
-		if err != nil {
-			return nil
-		}
+
+	// Always redo the package because the codesign for ios and iossimulator
+	// must be different.
+	if err := i.Packager.doPackage(nil); err != nil {
+		return nil
 	}
 
-	return i.runMobileInstall("ios-deploy", target, "--bundle")
+	switch i.os {
+	case "ios":
+		return i.runMobileInstall("ios-deploy", target, "--bundle")
+	case "iossimulator":
+		return i.installToIOSSimulator(target)
+	default:
+		return fmt.Errorf("unsupported install target: %s", target)
+	}
 }
 
 func (i *Installer) runMobileInstall(tool, target string, args ...string) error {
@@ -238,4 +244,27 @@ func (i *Installer) validate() error {
 	i.Packager.icon = i.icon
 	i.Packager.release = i.release
 	return i.Packager.validate()
+}
+
+func (i *Installer) installToIOSSimulator(target string) error {
+	cmd := execabs.Command(
+		"xcrun", "simctl", "install",
+		"booted", // Install to the booted simulator.
+		target)
+	if out, err := cmd.CombinedOutput(); err != nil {
+		return fmt.Errorf("Install to a simulator error: %s%s", out, err)
+	}
+
+	i.runInIOSSimulator()
+	return nil
+}
+
+func (i *Installer) runInIOSSimulator() error {
+	cmd := execabs.Command("xcrun", "simctl", "launch", "booted", i.Packager.appID)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		os.Stderr.Write(out)
+		return err
+	}
+	return nil
 }

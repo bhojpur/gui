@@ -21,30 +21,57 @@ package cmd
 // THE SOFTWARE.
 
 import (
-	"fmt"
+	"net/http"
 
+	ctxsvr "github.com/bhojpur/web/pkg/context"
+	utils "github.com/bhojpur/web/pkg/core/utils"
+	websvr "github.com/bhojpur/web/pkg/engine"
+	"github.com/bhojpur/web/pkg/filter/cors"
 	"github.com/spf13/cobra"
 )
 
 // webCmd represents the web command
 var webCmd = &cobra.Command{
 	Use:   "web",
-	Short: "To provide web user interface services",
+	Short: "To provide web application delivery/hosting services",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("web called")
+		websvr.InsertFilter("*", websvr.BeforeRouter, cors.Allow(&cors.Options{
+			AllowOrigins:     []string{"*"},
+			AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"},
+			AllowHeaders:     []string{"Origin", "X-Requested-With", "Content-Type", "Accept"},
+			ExposeHeaders:    []string{"Content-Length"},
+			AllowCredentials: true,
+		}))
+
+		// CORS Post method issue
+		websvr.InsertFilter("*", websvr.BeforeRouter, func(ctx *ctxsvr.Context) {
+			if ctx.Input.Method() == "OPTIONS" {
+				ctx.WriteString("ok")
+			}
+		})
+
+		websvr.InsertFilter("/", websvr.BeforeRouter, StaticContentHandler) // must have this for default page
+		websvr.InsertFilter("/*", websvr.BeforeRouter, StaticContentHandler)
+		websvr.Run() // custom configuration read fron ../conf/app.conf file
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(webCmd)
+}
 
-	// Here you will define your flags and configuration settings.
+func StaticContentHandler(ctx *ctxsvr.Context) {
+	urlPath := ctx.Request.URL.Path
+	path := "."
+	if urlPath == "/" {
+		path += "/index.html"
+	} else {
+		path += urlPath
+	}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// webCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// webCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	if utils.FileExists(path) {
+		http.ServeFile(ctx.ResponseWriter, ctx.Request, path)
+	} else {
+		http.ServeFile(ctx.ResponseWriter, ctx.Request, "./index.html")
+	}
 }

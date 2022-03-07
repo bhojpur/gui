@@ -1,5 +1,6 @@
-//go:build darwin || linux || openbsd || freebsd
+//go:build (darwin || linux || openbsd || freebsd) && go115
 // +build darwin linux openbsd freebsd
+// +build go115
 
 package gl
 
@@ -29,7 +30,6 @@ package gl
 #cgo linux        LDFLAGS: -lGLESv2
 #cgo openbsd      LDFLAGS: -L/usr/X11R6/lib/ -lGLESv2
 #cgo freebsd      LDFLAGS: -L/usr/local/X11R6/lib/ -lGLESv2
-
 #cgo android      CFLAGS: -Dos_android
 #cgo ios          CFLAGS: -Dos_ios
 #cgo darwin,!ios  CFLAGS: -Dos_macos
@@ -39,13 +39,10 @@ package gl
 #cgo freebsd      CFLAGS: -Dos_freebsd
 #cgo openbsd      CFLAGS: -I/usr/X11R6/include/
 #cgo freebsd      CFLAGS: -I/usr/local/X11R6/include/
-
 #include <stdint.h>
 #include "work.h"
-
 uintptr_t process(struct fnargs* cargs, char* parg0, char* parg1, char* parg2, int count) {
 	uintptr_t ret;
-
 	ret = processFn(&cargs[0], parg0);
 	if (count > 1) {
 		ret = processFn(&cargs[1], parg1);
@@ -53,7 +50,6 @@ uintptr_t process(struct fnargs* cargs, char* parg0, char* parg1, char* parg2, i
 	if (count > 2) {
 		ret = processFn(&cargs[2], parg2);
 	}
-
 	return ret;
 }
 */

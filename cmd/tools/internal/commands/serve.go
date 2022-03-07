@@ -27,24 +27,22 @@ import (
 	"strconv"
 
 	"github.com/urfave/cli/v2"
-
-	"github.com/bhojpur/gui/cmd/tools/internal/util"
 )
 
 // Server serve Bhojpur GUI wasm application over http
 type Server struct {
-	port              int
-	srcDir, icon, dir string
+	port                  int
+	srcDir, icon, dir, os string
 }
 
-// Serve return the cli command for serving Bhojpur GUI wasm application over http
+// Serve return the cli command for serving Bhojpur GUI wasm application over HTTP
 func Serve() *cli.Command {
 	s := &Server{}
 
 	return &cli.Command{
 		Name:        "serve",
-		Usage:       "Package an application using WebAssembly and expose it via a web server.",
-		Description: `The serve command packages an application using WebAssembly and expose it via a web server which port can be overridden with port.`,
+		Usage:       "Package a Bhojpur GUI application using WebAssembly and expose it via a web server.",
+		Description: `The serve command packages a Bhojpur GUI application using WebAssembly and expose it via a web server which port can be overridden with port.`,
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "sourceDir",
@@ -63,20 +61,28 @@ func Serve() *cli.Command {
 				Value:       8080,
 				Destination: &s.port,
 			},
+			&cli.StringFlag{
+				Name:        "target",
+				Aliases:     []string{"os"},
+				Usage:       "The web runtime to target (wasm, gopherjs, web).",
+				Value:       "wasm",
+				Destination: &s.os,
+			},
 		},
 		Action: s.Server,
 	}
 }
 
-func (s *Server) requestPackage() {
+func (s *Server) requestPackage() error {
 	p := &Packager{
-		os:     "wasm",
+		os:     s.os,
 		srcDir: s.srcDir,
 		icon:   s.icon,
 	}
 
-	p.Run([]string{})
+	err := p.Package()
 	s.dir = p.dir
+	return err
 }
 
 func (s *Server) serve() error {
@@ -85,14 +91,17 @@ func (s *Server) serve() error {
 		return err
 	}
 
-	s.requestPackage()
+	err = s.requestPackage()
+	if err != nil {
+		return err
+	}
 
-	webDir := util.EnsureSubDir(s.dir, "wasm")
+	webDir := util.EnsureSubDir(s.dir, s.os)
 	fileServer := http.FileServer(http.Dir(webDir))
 
 	http.Handle("/", fileServer)
 
-	fmt.Printf("Serving %s on HTTP port: %v\n", webDir, s.port)
+	fmt.Printf("Bhojpur GUI wasm engine serving %s on HTTP port: %v\n", webDir, s.port)
 	err = http.ListenAndServe(":"+strconv.Itoa(s.port), nil)
 
 	return err
@@ -113,6 +122,9 @@ func (s *Server) validate() error {
 	}
 	if s.port < 0 || s.port > 65535 {
 		return fmt.Errorf("the port must be a strictly positive number and be strictly smaller than 65536 (Got %v)", s.port)
+	}
+	if s.os != "wasm" && s.os != "gopherjs" && s.os != "web" {
+		return fmt.Errorf("unsupported web runtime (only wasm, gopherjs and web): %v", s.os)
 	}
 	return nil
 }

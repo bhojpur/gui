@@ -31,7 +31,7 @@ import (
 
 func newContext(canvas *js.Object, ca *contextAttributes) (context *js.Object, err error) {
 	if js.Global.Get("WebGLRenderingContext") == js.Undefined {
-		return nil, errors.New("Your browser doesn't appear to support WebGL.")
+		return nil, errors.New("Your web browser doesn't appear to support WebGL.")
 	}
 
 	attrs := map[string]bool{
