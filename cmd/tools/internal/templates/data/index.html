@@ -2,12 +2,14 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Bhojpur GUI - Web Application</title>
+		<title>Bhojpur Application</title>
 		<meta name="author" content="Shashi Bhushan Rai" />
+		<meta name="copyright" content="Bhojpur Consulting Private Limited, India. All rights reserved." />
 		<meta name="description" content="A web-scale distributed application using WebAssembly" />
 		<meta name="theme-color" content="#000000" />
 		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 		<link rel="shortcut icon" type="image/jpg" href="https://static.bhojpur.net/favicon.ico"/>
+		<meta name="robots" content="index,nofollow"/>
 		<style>
 			body {
 				height: 100%;
@@ -23,12 +25,7 @@
 			<script type="text/javascript" src="webgl-debug.js"></script>
 		{{end}}
 		{{if .HasWasm}}
-			<script>
-				var wasmBuild = true;
-				//if (window.chrome) {
-				//	wasmBuild = false;
-				//}
-			</script>
+			<script>var wasmBuild = true;</script>
 		{{else}}
 			<script>var wasmBuild = false;</script>
 		{{end}}
@@ -62,7 +59,7 @@
 
 				if (webgl_support()) {
 					if (wasmBuild && WebAssembly) {
-						main.innerHTML = "Downloading wasm_exec.js"
+						main.innerHTML = "Downloading wasm_exec.js integration file"
 						async_load("wasm_exec.js", function(){
 							// WebAssembly.instantiateStreaming is not currently available in Safari
 							if (WebAssembly && !WebAssembly.instantiateStreaming) { // polyfill
@@ -72,7 +69,7 @@
 								};
 							}
 
-							main.innerHTML = "Downloading web assembly file.";
+							main.innerHTML = "Downloading application web assembly file.";
 
 							const go = new Go();
 							WebAssembly.instantiateStreaming(fetch("{{.WasmFile}}"), go.importObject).then((result) => {
@@ -87,16 +84,16 @@
 							main.innerHTML = "";
 						});
 					} else {
-						main.innerHTML = "WebAssembly is not supported in your browser";
+						main.innerHTML = "WebAssembly is not supported in your web browser";
 					}
 				} else {
-					main.innerHTML = "WebGL is not supported in your browser";
+					main.innerHTML = "WebGL is not supported in your web browser";
 				}
 			}
 		</script>
 	</head>
 	<body onload="download_application()">
 		<div id="main"></div>
-		<noscript>Javascript need to be enable for this application to work.</noscript>
+		<noscript>Javascript need to be enable for this Bhojpur GUI application to work.</noscript>
 	</body>
 </html>

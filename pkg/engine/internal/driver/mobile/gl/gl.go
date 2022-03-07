@@ -371,7 +371,7 @@ func (ctx *context) ReadPixels(dst []byte, x, y, width, height int, format, ty E
 	ctx.enqueue(call{
 		args: fnargs{
 			fn: glfnReadPixels,
-			// TODO(crawshaw): support PIXEL_PACK_BUFFER in GLES3, uses offset.
+			// TODO: support PIXEL_PACK_BUFFER in GLES3, uses offset.
 			a0: uintptr(x),
 			a1: uintptr(y),
 			a2: uintptr(width),
@@ -421,7 +421,7 @@ func (ctx *context) TexImage2D(target Enum, level int, internalFormat int, width
 	ctx.enqueue(call{
 		args: fnargs{
 			fn: glfnTexImage2D,
-			// TODO(crawshaw): GLES3 offset for PIXEL_UNPACK_BUFFER and PIXEL_PACK_BUFFER.
+			// TODO: GLES3 offset for PIXEL_UNPACK_BUFFER and PIXEL_PACK_BUFFER.
 			a0: target.c(),
 			a1: uintptr(level),
 			a2: uintptr(internalFormat),

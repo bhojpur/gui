@@ -606,7 +606,7 @@ func processKey(env *C.JNIEnv, e *C.AInputEvent) {
 	default:
 		k.Direction = key.DirNone
 	}
-	// TODO(crawshaw): set Modifiers.
+	// TODO: set Modifiers.
 	theApp.events.In() <- k
 }
 

@@ -82,7 +82,7 @@ func main(f func(App)) {
 
 	go func() {
 		f(theApp)
-		// TODO(crawshaw): trigger runApp to return
+		// TODO: trigger runApp to return
 	}()
 	C.runApp()
 	panic("unexpected return from app.runApp")

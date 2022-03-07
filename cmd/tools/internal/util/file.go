@@ -63,13 +63,11 @@ func copyFileMode(src, tgt string, perm os.FileMode) (err error) {
 	if _, err := os.Stat(src); err != nil {
 		return err
 	}
-
 	source, err := os.Open(filepath.Clean(src))
 	if err != nil {
 		return err
 	}
 	defer source.Close()
-
 	target, err := os.OpenFile(tgt, os.O_RDWR|os.O_CREATE|os.O_TRUNC, perm)
 	if err != nil {
 		return err
@@ -79,7 +77,6 @@ func copyFileMode(src, tgt string, perm os.FileMode) (err error) {
 			err = r
 		}
 	}()
-
 	_, err = io.Copy(target, source)
 	return err
 }

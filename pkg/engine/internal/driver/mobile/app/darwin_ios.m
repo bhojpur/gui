@@ -1,3 +1,4 @@
+//go:build darwin || ios
 // +build darwin
 // +build ios
 
@@ -162,7 +163,7 @@ struct utsname sysInfo;
 
 - (void)viewWillTransitionToSize:(CGSize)ptSize withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
 	[coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-		// TODO(crawshaw): come up with a plan to handle animations.
+		// TODO: come up with a plan to handle animations.
 	} completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
 		UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
 		CGSize size = [UIScreen mainScreen].nativeBounds.size;
@@ -242,7 +243,7 @@ void runApp(void) {
 void makeCurrentContext(GLintptr context) {
 	EAGLContext* ctx = (EAGLContext*)context;
 	if (![EAGLContext setCurrentContext:ctx]) {
-		// TODO(crawshaw): determine how terrible this is. Exit?
+		// TODO: determine how terrible this is. Exit?
 		NSLog(@"failed to set current context");
 	}
 }

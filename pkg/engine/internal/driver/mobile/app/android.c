@@ -1,3 +1,4 @@
+//go:build android
 // +build android
 
 // Copyright (c) 2018 Bhojpur Consulting Private Limited, India. All rights reserved.
@@ -150,7 +151,7 @@ void ANativeActivity_onCreate(ANativeActivity *activity, void* savedState, size_
 	onCreate(activity);
 }
 
-// TODO(crawshaw): Test configuration on more devices.
+// TODO: Test configuration on more devices.
 static const EGLint RGB_888[] = {
 	EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
 	EGL_SURFACE_TYPE, EGL_WINDOW_BIT,

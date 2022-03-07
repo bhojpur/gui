@@ -304,7 +304,7 @@ func (p *Packager) doPackage(runner runner) error {
 
 func (p *Packager) removeBuild(files []string) {
 	for _, file := range files {
-		err := os.Remove(file)
+		err := os.RemoveAll(file)
 		if err != nil {
 			log.Println("Unable to remove temporary build file", p.exe)
 		}

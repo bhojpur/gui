@@ -28,7 +28,7 @@ tasks:
         desc: Build the web application
         cmds:
         - cd internal; guiutl package -name "Bhojpur GUI" -os wasm -icon Icon.png
-        - cd internal/wasm; ../../bin/guisvr web
+        - cd internal/wasm; gui web
 
     build-darwin:
         desc: Build the desktop application for current OS

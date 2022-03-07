@@ -63,7 +63,7 @@ func (p *Packager) packageDarwin() (err error) {
 
 	macOSDir := util.EnsureSubDir(contentsDir, "MacOS")
 	binName := filepath.Join(macOSDir, exeName)
-	if err := util.CopyExeFile(p.exe, binName); err != nil {
+	if err := util.CopyExeFile(p.srcDir+"/"+p.exe, binName); err != nil {
 		return fmt.Errorf("failed to copy executable: %w", err)
 	}
 

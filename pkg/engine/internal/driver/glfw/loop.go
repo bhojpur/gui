@@ -32,6 +32,9 @@ import (
 	"github.com/bhojpur/gui/pkg/engine/internal/painter"
 )
 
+// Rate of frame generation
+const drawSpeed = 120
+
 type funcData struct {
 	f    func()
 	done chan struct{} // Zero allocation signalling channel
@@ -125,7 +128,7 @@ func (d *gLDriver) drawSingleFrame() {
 }
 
 func (d *gLDriver) runGL() {
-	eventTick := time.NewTicker(time.Second / 60)
+	eventTick := time.NewTicker(time.Second / drawSpeed)
 	run.Lock()
 	run.flag = true
 	run.Unlock()
@@ -236,7 +239,7 @@ func (d *gLDriver) startDrawThread() {
 	if d.drawOnMainThread {
 		drawCh = make(chan time.Time) // don't tick when on M1
 	} else {
-		drawCh = time.NewTicker(time.Second / 60).C
+		drawCh = time.NewTicker(time.Second / drawSpeed).C
 	}
 
 	go func() {
