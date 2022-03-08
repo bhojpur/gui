@@ -8,7 +8,7 @@ require (
 	github.com/adrg/sysfont v0.1.2
 	github.com/benoitkugler/textlayout v0.0.9
 	github.com/bhojpur/configure v0.0.1
-	github.com/bhojpur/web v0.0.6
+	github.com/bhojpur/web v0.0.7
 	github.com/dsnet/compress v0.0.1
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3
 	github.com/fsnotify/fsnotify v1.5.1
