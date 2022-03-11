@@ -43,7 +43,7 @@ require (
 	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
-	gonum.org/v1/plot v0.10.0
+	gonum.org/v1/plot v0.10.1
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2
@@ -53,6 +53,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.4.0 // indirect
+	git.sr.ht/~sbinet/gg v0.3.1 // indirect
 	github.com/adrg/strutil v0.2.3 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
@@ -65,7 +66,6 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-fonts/liberation v0.2.0 // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
 	github.com/go-pdf/fpdf v0.5.0 // indirect
