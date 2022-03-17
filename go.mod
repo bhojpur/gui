@@ -37,13 +37,13 @@ require (
 	github.com/tdewolff/parse/v2 v2.5.27
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/yuin/goldmark v1.4.6
-	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
+	golang.org/x/image v0.0.0-20220302094943-723b81ca9867
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
 	golang.org/x/mod v0.5.1
 	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
-	gonum.org/v1/plot v0.10.0
+	gonum.org/v1/plot v0.11.0
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2
@@ -53,6 +53,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.4.0 // indirect
+	git.sr.ht/~sbinet/gg v0.3.1 // indirect
 	github.com/adrg/strutil v0.2.3 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
@@ -65,10 +66,9 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-fonts/liberation v0.2.0 // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
-	github.com/go-pdf/fpdf v0.5.0 // indirect
+	github.com/go-pdf/fpdf v0.6.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
