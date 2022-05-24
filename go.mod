@@ -35,7 +35,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tdewolff/minify/v2 v2.10.0
 	github.com/tdewolff/parse/v2 v2.5.27
-	github.com/urfave/cli/v2 v2.3.0
+	github.com/urfave/cli/v2 v2.8.1
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
@@ -90,6 +90,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
