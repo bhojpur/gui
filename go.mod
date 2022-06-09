@@ -39,10 +39,10 @@ require (
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
-	golang.org/x/mod v0.5.1
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4
 	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
 	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.9
+	golang.org/x/tools v0.1.11
 	gonum.org/v1/plot v0.10.0
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
@@ -95,7 +95,6 @@ require (
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
