@@ -6,7 +6,7 @@ require (
 	github.com/ByteArena/poly2tri-go v0.0.0-20170716161910-d102ad91854f
 	github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9
 	github.com/adrg/sysfont v0.1.2
-	github.com/benoitkugler/textlayout v0.0.9
+	github.com/benoitkugler/textlayout v0.2.1
 	github.com/bhojpur/configure v0.0.1
 	github.com/bhojpur/web v0.0.6
 	github.com/dsnet/compress v0.0.1
