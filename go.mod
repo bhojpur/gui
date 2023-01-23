@@ -35,7 +35,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tdewolff/minify/v2 v2.10.0
 	github.com/tdewolff/parse/v2 v2.5.27
-	github.com/urfave/cli/v2 v2.3.0
+	github.com/urfave/cli/v2 v2.24.1
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
@@ -62,7 +62,7 @@ require (
 	github.com/bhojpur/session v0.0.2 // indirect
 	github.com/bhojpur/token v0.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
@@ -90,6 +90,7 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
@@ -101,7 +102,7 @@ require (
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.23.4 // indirect
 	k8s.io/klog/v2 v2.40.1 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
