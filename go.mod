@@ -10,7 +10,7 @@ require (
 	github.com/bhojpur/configure v0.0.1
 	github.com/bhojpur/web v0.0.6
 	github.com/dsnet/compress v0.0.1
-	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3
+	github.com/fredbi/uri v1.0.0
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
@@ -32,7 +32,7 @@ require (
 	github.com/spf13/cobra v1.3.0
 	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44
 	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41
-	github.com/stretchr/testify v1.7.0
+	github.com/stretchr/testify v1.8.0
 	github.com/tdewolff/minify/v2 v2.10.0
 	github.com/tdewolff/parse/v2 v2.5.27
 	github.com/urfave/cli/v2 v2.3.0
@@ -101,7 +101,7 @@ require (
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.23.4 // indirect
 	k8s.io/klog/v2 v2.40.1 // indirect
 	k8s.io/utils v0.0.0-20220210201930-3a6ce19ff2f9 // indirect
