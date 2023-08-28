@@ -16,7 +16,7 @@ require (
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
 	github.com/go-gl/mathgl v1.0.0
 	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81
-	github.com/go-ole/go-ole v1.2.6
+	github.com/go-ole/go-ole v1.3.0
 	github.com/godbus/dbus/v5 v5.0.4
 	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0
@@ -40,7 +40,7 @@ require (
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
 	golang.org/x/mod v0.5.1
-	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
+	golang.org/x/sys v0.1.0
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
 	gonum.org/v1/plot v0.10.0
