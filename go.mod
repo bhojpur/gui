@@ -14,7 +14,7 @@ require (
 	github.com/fsnotify/fsnotify v1.5.1
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
-	github.com/go-gl/mathgl v1.0.0
+	github.com/go-gl/mathgl v1.1.0
 	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81
 	github.com/go-ole/go-ole v1.2.6
 	github.com/godbus/dbus/v5 v5.0.4
