@@ -15,7 +15,7 @@ require (
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
 	github.com/go-gl/mathgl v1.0.0
-	github.com/go-latex/latex v0.0.0-20210823091927-c0d11ff05a81
+	github.com/go-latex/latex v0.0.0-20230307184459-12ec69307ad9
 	github.com/go-ole/go-ole v1.2.6
 	github.com/godbus/dbus/v5 v5.0.4
 	github.com/goki/freetype v0.0.0-20220119013949-7a161fd3728c
@@ -36,14 +36,14 @@ require (
 	github.com/tdewolff/minify/v2 v2.10.0
 	github.com/tdewolff/parse/v2 v2.5.27
 	github.com/urfave/cli/v2 v2.3.0
-	github.com/yuin/goldmark v1.4.6
-	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
+	github.com/yuin/goldmark v1.4.13
+	golang.org/x/image v0.11.0
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
-	golang.org/x/mod v0.5.1
-	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
-	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.9
-	gonum.org/v1/plot v0.10.0
+	golang.org/x/mod v0.8.0
+	golang.org/x/sys v0.11.0
+	golang.org/x/text v0.12.0
+	golang.org/x/tools v0.6.0
+	gonum.org/v1/plot v0.14.0
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2
@@ -53,6 +53,7 @@ require (
 
 require (
 	cloud.google.com/go/compute v1.4.0 // indirect
+	git.sr.ht/~sbinet/gg v0.5.0 // indirect
 	github.com/adrg/strutil v0.2.3 // indirect
 	github.com/adrg/xdg v0.4.0 // indirect
 	github.com/ajstarks/svgo v0.0.0-20211024235047-1546f124cd8b // indirect
@@ -61,14 +62,14 @@ require (
 	github.com/bhojpur/logger v0.0.3 // indirect
 	github.com/bhojpur/session v0.0.2 // indirect
 	github.com/bhojpur/token v0.0.1 // indirect
+	github.com/campoy/embedmd v1.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/spdystream v0.1.0 // indirect
-	github.com/fogleman/gg v1.3.0 // indirect
-	github.com/go-fonts/liberation v0.2.0 // indirect
+	github.com/go-fonts/liberation v0.3.1 // indirect
 	github.com/go-logr/logr v1.2.2 // indirect
-	github.com/go-pdf/fpdf v0.5.0 // indirect
+	github.com/go-pdf/fpdf v0.8.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -91,11 +92,10 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
-	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
+	golang.org/x/net v0.6.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8 // indirect
-	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
+	golang.org/x/term v0.5.0 // indirect
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20220222213610-43724f9ea8cf // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
