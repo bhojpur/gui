@@ -11,7 +11,7 @@ require (
 	github.com/bhojpur/web v0.0.6
 	github.com/dsnet/compress v0.0.1
 	github.com/fredbi/uri v0.0.0-20181227131451-3dcfdacbaaf3
-	github.com/fsnotify/fsnotify v1.5.1
+	github.com/fsnotify/fsnotify v1.7.0
 	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6
 	github.com/go-gl/glfw/v3.3/glfw v0.0.0-20211213063430-748e38ca8aec
 	github.com/go-gl/mathgl v1.0.0
@@ -33,14 +33,14 @@ require (
 	github.com/srwiley/oksvg v0.0.0-20220128195007-1f435e4c2b44
 	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41
 	github.com/stretchr/testify v1.7.0
-	github.com/tdewolff/minify/v2 v2.10.0
-	github.com/tdewolff/parse/v2 v2.5.27
+	github.com/tdewolff/minify/v2 v2.20.10
+	github.com/tdewolff/parse/v2 v2.7.7
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
 	golang.org/x/mod v0.5.1
-	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
+	golang.org/x/sys v0.15.0
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
 	gonum.org/v1/plot v0.10.0
