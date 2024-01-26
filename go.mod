@@ -34,7 +34,7 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220128185129-2efea2b9ea41
 	github.com/stretchr/testify v1.7.0
 	github.com/tdewolff/minify/v2 v2.10.0
-	github.com/tdewolff/parse/v2 v2.5.27
+	github.com/tdewolff/parse/v2 v2.7.10
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/yuin/goldmark v1.4.6
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
