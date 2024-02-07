@@ -40,7 +40,7 @@ require (
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410
 	golang.org/x/mobile v0.0.0-20190719004257-d2bd2a29d028
 	golang.org/x/mod v0.5.1
-	golang.org/x/sys v0.0.0-20220222200937-f2425489ef4c
+	golang.org/x/sys v0.17.0
 	golang.org/x/text v0.3.7
 	golang.org/x/tools v0.1.9
 	gonum.org/v1/plot v0.10.0
