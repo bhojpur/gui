@@ -45,7 +45,7 @@ require (
 	golang.org/x/tools v0.1.9
 	gonum.org/v1/plot v0.10.0
 	google.golang.org/grpc v1.44.0
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.33.0
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2
 	k8s.io/apimachinery v0.23.4
 	k8s.io/client-go v1.5.2
